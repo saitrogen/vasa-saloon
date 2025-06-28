@@ -19,12 +19,17 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { Button } from '@/components/ui/button'
 import { useStaffStore } from '@/stores/staff'
+import { useCollectionStore } from '@/stores/collections'
 import { storeToRefs } from 'pinia'
-import { getDaysInMonth } from 'date-fns'
+import { getDaysInMonth, getDate } from 'date-fns'
 
 const staffStore = useStaffStore()
-const { staffList: staff, loading } = storeToRefs(staffStore)
+const { staffList: staff, loading: staffLoading } = storeToRefs(staffStore)
+
+const collectionStore = useCollectionStore()
+const { collections: fetchedCollections, loading } = storeToRefs(collectionStore)
 
 const collections = ref<Record<number, Record<string, number>>>({})
 
@@ -81,18 +86,37 @@ const grandTotal = computed(() => {
   return Object.values(dailyTotals.value).reduce((sum, val) => sum + val, 0)
 })
 
+const handleSave = () => {
+  const collectionsToSave = Object.entries(collections.value).flatMap(([day, staffData]) =>
+    Object.entries(staffData).map(([staff_id, amount]) => ({
+      date: day,
+      staff_id,
+      amount: Number(amount) || 0,
+    }))
+  )
+  collectionStore.saveCollections(selectedYear.value, selectedMonth.value, collectionsToSave)
+}
+
 const initializeCollections = () => {
   const newCollections: Record<number, Record<string, number>> = {}
   daysInMonth.value.forEach(day => {
     newCollections[day] = {}
-    if (staff.value) {
-      staff.value.forEach(s => {
-        newCollections[day][s.id] = 0
-      })
-    }
+    staff.value.forEach(s => {
+      // Find the corresponding collection entry if it exists
+      const foundCollection = fetchedCollections.value.find(c =>
+        getDate(new Date(c.date)) === day && c.staff_id === s.id
+      )
+      newCollections[day][s.id] = foundCollection ? foundCollection.amount : 0
+    })
   })
   collections.value = newCollections
 }
+
+watchEffect(() => {
+  if (staff.value.length > 0) {
+    collectionStore.fetchCollections(selectedYear.value, selectedMonth.value)
+  }
+})
 
 watchEffect(() => {
   if (staff.value.length > 0 && daysInMonth.value.length > 0) {
@@ -106,54 +130,62 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
-    <div class="flex items-center justify-between">
-      <div>
-        <h2 class="text-3xl font-bold tracking-tight">
-          Daily Collections
-        </h2>
-        <p class="text-sm text-muted-foreground">
-          Here's a list of daily collections for this month.
-        </p>
-      </div>
-      <div class="flex items-center space-x-4">
-        <Select v-model="selectedMonth">
-          <SelectTrigger class="w-[180px]">
-            <SelectValue placeholder="Select a month" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Months</SelectLabel>
-              <SelectItem v-for="month in months" :key="month.value" :value="month.value">
-                {{ month.label }}
-              </SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <Select v-model="selectedYear">
-          <SelectTrigger class="w-[180px]">
-            <SelectValue placeholder="Select a year" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Years</SelectLabel>
-              <SelectItem v-for="year in years" :key="year" :value="year">
-                {{ year }}
-              </SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+  <div class="h-full flex flex-col">
+    <!-- Page Header -->
+    <div class="p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-3xl font-bold tracking-tight">
+            Daily Collections
+          </h2>
+          <p class="text-sm text-muted-foreground">
+            Here's a list of daily collections for this month.
+          </p>
+        </div>
+        <div class="flex items-center space-x-4">
+          <Select v-model="selectedMonth">
+            <SelectTrigger class="w-[180px]">
+              <SelectValue placeholder="Select a month" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Months</SelectLabel>
+                <SelectItem v-for="month in months" :key="month.value" :value="month.value">
+                  {{ month.label }}
+                </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <Select v-model="selectedYear">
+            <SelectTrigger class="w-[180px]">
+              <SelectValue placeholder="Select a year" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Years</SelectLabel>
+                <SelectItem v-for="year in years" :key="year" :value="year">
+                  {{ year }}
+                </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <Button @click="handleSave" :disabled="loading || staffLoading">
+            Save Collections
+          </Button>
+        </div>
       </div>
     </div>
-    <div class="mt-6">
-      <div v-if="loading" class="text-center py-12">
+
+    <!-- Scrollable Table Area -->
+    <div class="flex-1 overflow-y-auto px-6">
+      <div v-if="loading || staffLoading" class="text-center py-12">
         <p class="text-lg font-semibold">
-          Loading staff...
+          Loading data...
         </p>
         <p class="text-muted-foreground">Please wait a moment.</p>
       </div>
       <Table v-else>
-        <TableHeader>
+        <TableHeader class="sticky top-0 bg-background">
           <TableRow>
             <TableHead class="w-[100px]">
               Date
@@ -175,7 +207,7 @@ onMounted(() => {
             <TableCell class="font-bold text-right">{{ dailyTotals[day] }}</TableCell>
           </TableRow>
         </TableBody>
-        <TableFooter>
+        <TableFooter class="sticky bottom-0 bg-background">
           <TableRow>
             <TableCell class="font-bold">Total</TableCell>
             <TableCell v-for="s in staff" :key="s.id" class="font-bold">

@@ -56,7 +56,7 @@ const handleLogout = async () => {
           <Button variant="outline" @click="handleLogout">Logout</Button>
         </div>
       </header>
-      <main class="flex-1 overflow-x-hidden overflow-y-auto bg-background p-6">
+      <main class="flex-1 overflow-hidden bg-background">
         <RouterView />
       </main>
     </div>

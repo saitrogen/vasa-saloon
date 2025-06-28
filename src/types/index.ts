@@ -9,4 +9,14 @@ export interface Staff {
   is_active: boolean;
   created_at: string;
   updated_at: string;
+}
+
+export interface DailyCollection {
+  id: string;
+  monthly_record_id: string;
+  date: string; // YYYY-MM-DD
+  staff_id: string;
+  amount: number;
+  created_at: string;
+  updated_at: string;
 } 

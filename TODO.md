@@ -30,9 +30,9 @@
         - [x] Implement a function to calculate the grand total for the month.
         - [x] Make all calculations update in real-time as input values change.
     - [ ] **Data Persistence**
-        - [ ] Implement a function to fetch existing collection data for the selected month/year.
-        - [ ] Implement a function to save/update collection data to the `daily_collections` table.
-        - [ ] Add a "Save" button to trigger the persistence logic.
+        - [x] Implement a function to fetch existing collection data for the selected month/year.
+        - [x] Implement a function to save/update collection data to the `daily_collections` table.
+        - [x] Add a "Save" button to trigger the persistence logic.
 - [ ] **Basic Expense Tracking**
 - [ ] **Simple Summary Calculations**
 - [ ] **Deployment**
