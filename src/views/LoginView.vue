@@ -7,8 +7,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useAuth } from '@/composables/useAuth'
 
-const email = ref('test@example.com') // Default for easier testing
-const password = ref('password') // Default for easier testing
+const email = ref('') // Default for easier testing
+const password = ref('') // Default for easier testing
 const loading = ref(false)
 const router = useRouter()
 const { login } = useAuth()

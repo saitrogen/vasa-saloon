@@ -20,9 +20,19 @@
         - [x] Create a new `CollectionsView.vue` component and add it to the router.
         - [x] Install `Data Table`, `Select`, and other necessary `shadcn-vue` components.
         - [x] Design the UI with a month/year selector and a placeholder for the collections table.
-        - [ ] Fetch the staff list using the `useStaffStore`.
-        - [ ] Dynamically generate the table columns based on the staff list.
-        - [ ] Statically generate the 31-day calendar rows in the table.
+        - [x] Fetch the staff list using the `useStaffStore`.
+        - [x] Dynamically generate the table columns based on the staff list.
+        - [x] Statically generate the 31-day calendar rows in the table.
+    - [ ] **Collection Logic & Calculations**
+        - [x] Create a reactive data structure to hold the collection values.
+        - [x] Implement a function to calculate the total for each day (row total).
+        - [x] Implement a function to calculate the total for each staff member (column total).
+        - [x] Implement a function to calculate the grand total for the month.
+        - [x] Make all calculations update in real-time as input values change.
+    - [ ] **Data Persistence**
+        - [ ] Implement a function to fetch existing collection data for the selected month/year.
+        - [ ] Implement a function to save/update collection data to the `daily_collections` table.
+        - [ ] Add a "Save" button to trigger the persistence logic.
 - [ ] **Basic Expense Tracking**
 - [ ] **Simple Summary Calculations**
 - [ ] **Deployment**
