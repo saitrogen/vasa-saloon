@@ -1,0 +1,50 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+## Development Workflow
+
+U MUST follow this precise workflow for all development tasks:
+
+1.  **Pick Task:** Select the next high-level task from `project_detailes/mainTODO.md`.
+2.  **Break Down Task:** Break the task into smaller, manageable steps and list them in `TODO.md` in advance.
+3.  **Work on Sub-task:** Implement the next sub-task from the `TODO.md` list.
+4.  **Update Sub-task Status:** Mark the sub-task as complete in `TODO.md`.
+5.  **Repeat:** Continue working through sub-tasks until all items in `TODO.md` for the current main task are complete.
+6.  **Update Main Task:** Mark the main task as complete in `project_detailes/mainTODO.md`.
+7.  **Report & Wait:** Report completion to the user and await user feedback or command to proceed "next".
+
+## UI Development Guidelines
+- Use **shadcn-vue** components wherever possible to ensure UI consistency and speed up development.
+- Install necessary `shadcn-vue` components on a per-need basis.
+
+
+## Don't Do These Things
+- DON'T use Options API - stick to Composition API
+- DON'T mutate props directly
+- DON'T forget to handle loading and error states
+- DON'T create deeply nested component hierarchies
+- DON'T use `any` type - always provide proper TypeScript types
+- DON'T bypass Supabase RLS policies
+- DON'T forget to unsubscribe from real-time subscriptions
+- DON'T use `document.querySelector` - use template refs
+- DON'T create memory leaks with uncleared watchers/intervals
+
+## When You're Unsure
+- Check the Shadcn-vue documentation for component APIs
+- Refer to Vue 3 Composition API docs for reactive patterns
+- Check Supabase docs for database and auth patterns
+- Ask for clarification on business logic requirements
+- Prioritize type safety and error handling
+- Focus on user experience and accessibility
+
+## 📖 Resources & References
+
+### Documentation Links
+- @Vue 3 Composition API
+- @Shadcn-vue Components
+- @Supabase Documentation
+- @Tailwind CSS
+- @Pinia Store
+

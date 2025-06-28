@@ -1,0 +1,25 @@
+- [ ] **Project Setup & Foundation**
+    - [x] Initialize Vue 3 + Vite + TypeScript project.
+    - [x] Integrate Tailwind CSS.
+    - [x] Install and configure `shadcn-vue`.
+    - [x] Install and configure Pinia for state management.
+    - [x] Install and configure VeeValidate with Yup.
+    - [x] Install `date-fns` or `dayjs` for date handling.
+    - [x] **Set up Vue Router with protected routes and base layouts.**
+        - [x] Create `src/router/index.ts` with initial route definitions.
+        - [x] Create placeholder view components (`HomeView`, `LoginView`, `DashboardView`).
+        - [x] Create a default layout component (`DefaultLayout.vue`).
+        - [x] Create an authenticated layout component (`AppLayout.vue`).
+        - [x] Update `App.vue` to use `router-view` and manage layouts.
+        - [x] Integrate the router into `src/main.ts`.
+        - [x] Implement a basic navigation guard for protected routes.
+    - [x] **Supabase Integration**
+        - [x] Install the Supabase client library.
+        - [x] Create environment file (`.env`) for Supabase credentials.
+        - [x] Add `.env` to `.gitignore`.
+        - [x] Create the Supabase client configuration file (`src/lib/supabaseClient.ts`).
+        - [x] Define database schema as SQL migration files.
+        - [x] Configure basic RLS policies as SQL migration files.
+
+- [ ] **Authentication & Staff Foundation**
+ 

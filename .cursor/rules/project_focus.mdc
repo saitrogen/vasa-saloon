@@ -1,0 +1,61 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# VASA SALOON Financial Management System - Core Guidelines
+
+This is a web application to streamline financial tracking for a salon.
+
+## 1. Core Objective
+Automate daily revenue collection, expense management, and payroll to generate real-time financial summaries. Eliminate manual calculations and reduce errors.
+
+## 2. Target Users
+Small salon business owners and managers.
+
+## 3. Technology Stack
+
+### Frontend
+- **Framework:** Vue 3 + Vite with TypeScript
+- **Styling:** Tailwind CSS
+- **UI Components:** shadcn-vue
+- **State Management:** Pinia
+- **Forms:** VeeValidate with Yup
+- **Date Handling:** `date-fns` or `Day.js`
+
+### Backend
+- **Service:** Supabase
+- **Database:** PostgreSQL
+- **Auth:** Supabase Auth
+- **API:** Supabase Auto-generated REST/GraphQL
+- **Real-time:** Supabase Realtime subscriptions
+
+## 4. Key Architectural Principles
+- **Single Page Application (SPA):** Use a tabbed navigation layout.
+- **Real-time Calculations:** Live updates across all interconnected fields.
+- **Role-Based Access Control (RBAC):**
+  - **Admin:** Full access.
+  - **Manager:** View all financial data, manage expenses.
+  - **Staff:** Enter their own daily collections only.
+- **Data Models:** Adhere to the data models defined in `project_detailes/prd.md`.
+- **Security:** Implement Supabase Row Level Security (RLS) as a priority.
+
+Refer to `project_detailes/prd.md` for full details.
+
+---
+## 5. Development Workflow
+
+U MUST follow this precise workflow for all development tasks:
+
+1.  **Pick Task:** Select the next high-level task from `project_detailes/mainTODO.md`.
+2.  **Break Down Task:** Break the task into smaller, manageable steps and list them in `TODO.md` in advance.
+3.  **Work on Sub-task:** Implement the next sub-task from the `TODO.md` list.
+4.  **Update Sub-task Status:** Mark the sub-task as complete in `TODO.md`.
+5.  **Repeat:** Continue working through sub-tasks until all items in `TODO.md` for the current main task are complete.
+6.  **Update Main Task:** Mark the main task as complete in `project_detailes/mainTODO.md`.
+7.  **Report & Wait:** Report completion to the user and await user feedback or command to proceed "next".
+
+## 6. UI Development Guidelines
+- Use **shadcn-vue** components wherever possible to ensure UI consistency and speed up development.
+- Install necessary `shadcn-vue` components on a per-need basis.
+
