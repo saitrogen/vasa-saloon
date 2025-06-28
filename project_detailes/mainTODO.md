@@ -34,20 +34,25 @@
   - [x] Set up role-based route guards
   - **Priority:** High | **Estimated:** 1 day
 
+### 🎨 UI & Theming
+- [x] **Implement Dark Mode**
+  - [x] Set up theme provider and toggle
+  - **Priority:** Medium | **Estimated:** 1 day
+
 ### 🔐 Authentication System
-- [ ] **User Authentication Flow**
-  - [ ] Create login/signup pages
-  - [ ] Implement Supabase auth integration
-  - [ ] Set up role-based access control
-  - [ ] Create auth composables (useAuth)
-  - [ ] Handle auth state persistence
+- [x] **User Authentication Flow**
+  - [x] Create login/signup pages
+  - [x] Implement Supabase auth integration
+  - [x] Set up role-based access control
+  - [x] Create auth composables (useAuth)
+  - [x] Handle auth state persistence
   - **Priority:** High | **Estimated:** 2 days
 
-- [ ] **Staff Management Foundation**
-  - [ ] Create Staff interface/types
-  - [ ] Implement basic staff CRUD operations
-  - [ ] Set up staff store (Pinia)
-  - [ ] Create staff management composables
+- [x] **Staff Management Foundation**
+  - [x] Create Staff interface/types
+  - [x] Implement basic staff CRUD operations
+  - [x] Set up staff store (Pinia)
+  - [x] Create staff management composables
   - **Priority:** Medium | **Estimated:** 1 day
 
 ### 📊 Daily Collection Module

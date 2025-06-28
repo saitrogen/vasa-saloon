@@ -16,8 +16,8 @@ U MUST follow this precise workflow for all development tasks:
 7.  **Report & Wait:** Report completion to the user and await user feedback or command to proceed "next".
 
 ## UI Development Guidelines
-- Use **shadcn-vue** components wherever possible to ensure UI consistency and speed up development.
-- Install necessary `shadcn-vue` components on a per-need basis.
+- Use **shadcn-vue** components and blocks wherever possible to ensure UI consistency and speed up development.
+- Install necessary `shadcn-vue` components and blocks on a per-need basis.
 
 
 ## Don't Do These Things
@@ -40,7 +40,7 @@ U MUST follow this precise workflow for all development tasks:
 - Focus on user experience and accessibility
 
 ## 📖 Resources & References
-
+- quary as needs
 ### Documentation Links
 - @Vue 3 Composition API
 - @Shadcn-vue Components
@@ -48,3 +48,25 @@ U MUST follow this precise workflow for all development tasks:
 - @Tailwind CSS
 - @Pinia Store
 
+Here are the documentation links for the technologies :
+
+* **Vue 3 Composition API:**
+    * Official Vue.js Guide: [https://vuejs.org/guide/extras/composition-api-faq](mdc:https:/vuejs.org/guide/extras/composition-api-faq)
+    * Pinia Documentation (Pinia heavily uses Composition API): [https://pinia.vuejs.org/core-concepts/](mdc:https:/pinia.vuejs.org/core-concepts) (specifically the "Defining a Store" section covers setup stores which are Composition API based)
+
+* **Shadcn-vue Components:**
+    * Official Shadcn UI (React) Introduction (the principles apply to Vue): [https://ui.shadcn.com/docs](mdc:https:/ui.shadcn.com/docs)
+    * Shadcn-vue GitHub Documentation (provides context on the Vue port): [https://github.com/unovue/shadcn-vue/blob/dev/apps/www/src/content/docs/contribution.md](mdc:https:/github.com/unovue/shadcn-vue/blob/dev/apps/www/src/content/docs/contribution.md)
+
+* **Supabase Documentation:**
+    * Main Documentation Portal: [https://supabase.com/docs](mdc:https:/supabase.com/docs)
+    * Auth Documentation: [https://supabase.com/docs/guides/auth](mdc:https:/supabase.com/docs/guides/auth)
+    * Database Documentation: [https://supabase.com/docs/guides/database](mdc:https:/supabase.com/docs/guides/database)
+
+* **Tailwind CSS:**
+    * Official Documentation: [https://tailwindcss.com/docs](mdc:https:/tailwindcss.com/docs)
+
+* **Pinia Store:**
+    * Official Documentation: [https://pinia.vuejs.org/](mdc:https:/pinia.vuejs.org)
+    * Getting Started: [https://pinia.vuejs.org/getting-started.html](mdc:https:/pinia.vuejs.org/getting-started.html)
+    * Core Concepts (Defining a Store): [https://pinia.vuejs.org/core-concepts/](mdc:https:/pinia.vuejs.org/core-concepts)

@@ -1,25 +1,29 @@
-- [ ] **Project Setup & Foundation**
-    - [x] Initialize Vue 3 + Vite + TypeScript project.
-    - [x] Integrate Tailwind CSS.
-    - [x] Install and configure `shadcn-vue`.
-    - [x] Install and configure Pinia for state management.
-    - [x] Install and configure VeeValidate with Yup.
-    - [x] Install `date-fns` or `dayjs` for date handling.
-    - [x] **Set up Vue Router with protected routes and base layouts.**
-        - [x] Create `src/router/index.ts` with initial route definitions.
-        - [x] Create placeholder view components (`HomeView`, `LoginView`, `DashboardView`).
-        - [x] Create a default layout component (`DefaultLayout.vue`).
-        - [x] Create an authenticated layout component (`AppLayout.vue`).
-        - [x] Update `App.vue` to use `router-view` and manage layouts.
-        - [x] Integrate the router into `src/main.ts`.
-        - [x] Implement a basic navigation guard for protected routes.
-    - [x] **Supabase Integration**
-        - [x] Install the Supabase client library.
-        - [x] Create environment file (`.env`) for Supabase credentials.
-        - [x] Add `.env` to `.gitignore`.
-        - [x] Create the Supabase client configuration file (`src/lib/supabaseClient.ts`).
-        - [x] Define database schema as SQL migration files.
-        - [x] Configure basic RLS policies as SQL migration files.
-
-- [ ] **Authentication & Staff Foundation**
+- [x] **Authentication & Staff Foundation**
+    - [x] **User Authentication Flow**
+        - [x] Enhance `LoginView.vue` with a form using shadcn-vue components.
+        - [x] Create an `auth` store (Pinia) to manage user state.
+        - [x] Implement login/logout functions using Supabase client.
+        - [x] Implement a `useAuth` composable for easy access to auth state and functions.
+        - [x] Update the navigation guard in `router/index.ts` to use the real auth state.
+    - [x] **Staff Management Foundation**
+        - [x] Create Staff interface/types.
+        - [x] Implement basic staff CRUD operations in a service file.
+        - [x] Set up staff store (Pinia).
+- [x] **Implement Dark Mode**
+    - [x] Install `DropdownMenu` component for the theme toggle.
+    - [x] Create `useTheme` composable based on `shadcn-vue` documentation.
+    - [x] Update `App.vue` to use the theme provider.
+    - [x] Create a `ThemeToggle.vue` component.
+    - [x] Add the `ThemeToggle` to the `AppLayout.vue` header.
+- [ ] **Daily Collection Module**
+    - [ ] **Core Collection Interface**
+        - [x] Create a new `CollectionsView.vue` component and add it to the router.
+        - [x] Install `Data Table`, `Select`, and other necessary `shadcn-vue` components.
+        - [x] Design the UI with a month/year selector and a placeholder for the collections table.
+        - [ ] Fetch the staff list using the `useStaffStore`.
+        - [ ] Dynamically generate the table columns based on the staff list.
+        - [ ] Statically generate the 31-day calendar rows in the table.
+- [ ] **Basic Expense Tracking**
+- [ ] **Simple Summary Calculations**
+- [ ] **Deployment**
  
