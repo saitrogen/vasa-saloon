@@ -89,12 +89,13 @@ const grandTotal = computed(() => {
 const handleSave = () => {
   const collectionsToSave = Object.entries(collections.value).flatMap(([day, staffData]) =>
     Object.entries(staffData).map(([staff_id, amount]) => ({
-      date: day,
+      day: Number(day),
       staff_id,
       amount: Number(amount) || 0,
     }))
   )
-  collectionStore.saveCollections(selectedYear.value, selectedMonth.value, collectionsToSave)
+  // The store expects a 1-indexed month
+  collectionStore.saveCollections(selectedYear.value, selectedMonth.value + 1, collectionsToSave)
 }
 
 const initializeCollections = () => {
@@ -102,10 +103,11 @@ const initializeCollections = () => {
   daysInMonth.value.forEach(day => {
     newCollections[day] = {}
     staff.value.forEach(s => {
-      // Find the corresponding collection entry if it exists
-      const foundCollection = fetchedCollections.value.find(c =>
-        getDate(new Date(c.date)) === day && c.staff_id === s.id
-      )
+      const foundCollection = fetchedCollections.value.find(c => {
+        // Timezone-safe date comparison
+        const [year, month, cDay] = c.date.split('-').map(Number)
+        return year === selectedYear.value && month === (selectedMonth.value + 1) && cDay === day && c.staff_id === s.id
+      })
       newCollections[day][s.id] = foundCollection ? foundCollection.amount : 0
     })
   })
@@ -202,7 +204,7 @@ onMounted(() => {
           <TableRow v-for="day in daysInMonth" :key="day">
             <TableCell>{{ day }}</TableCell>
             <TableCell v-for="s in staff" :key="s.id">
-              <Input type="number" class="w-20" v-model="collections[day][s.id]" />
+              <Input type="number" class="w-20" v-model.number="collections[day][s.id]" />
             </TableCell>
             <TableCell class="font-bold text-right">{{ dailyTotals[day] }}</TableCell>
           </TableRow>

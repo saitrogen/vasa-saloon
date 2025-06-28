@@ -21,19 +21,11 @@ async function getCollectionsByMonth(year: number, month: number): Promise<Daily
   return data || []
 }
 
-async function saveCollections(collections: Omit<DailyCollection, 'id' | 'created_at' | 'updated_at' | 'monthly_record_id'>[], year: number, month: number): Promise<DailyCollection[]> {
-  // This is a placeholder for now. We need to get or create a monthly_record_id
-  const monthlyRecordId = '00000000-0000-0000-0000-000000000000' // FIXME
-
-  const recordsToUpsert = collections.map(c => ({
-    ...c,
-    monthly_record_id: monthlyRecordId,
-    date: formatISO(new Date(year, month, c.date as any), { representation: 'date' })
-  }))
+async function saveCollections(collections: Omit<DailyCollection, 'id' | 'created_at' | 'updated_at'>[]): Promise<DailyCollection[]> {
 
   const { data, error } = await supabase
     .from('daily_collections')
-    .upsert(recordsToUpsert, { onConflict: 'date, staff_id' })
+    .upsert(collections, { onConflict: 'monthly_record_id, staff_id, date' })
     .select()
 
   if (error) {
