@@ -5,7 +5,7 @@ alwaysApply: true
 ---
 ## Development Workflow
 
-U MUST follow this precise workflow for all development tasks:
+you/model MUST follow this precise workflow for all development tasks:
 
 1.  **Pick Task:** Select the next high-level task from `project_detailes/mainTODO.md`.
 2.  **Break Down Task:** Break the task into smaller, manageable steps and list them in `TODO.md` in advance.
@@ -14,6 +14,15 @@ U MUST follow this precise workflow for all development tasks:
 5.  **Repeat:** Continue working through sub-tasks until all items in `TODO.md` for the current main task are complete.
 6.  **Update Main Task:** Mark the main task as complete in `project_detailes/mainTODO.md`.
 7.  **Report & Wait:** Report completion to the user and await user feedback or command to proceed "next".
+
+
+## Error-Fixing Workflow
+you/model  MUST follow this precise workflow for all error-fixing tasks
+1. **Log Bugs:** Add the reported issues to `errorTODO.md` .
+2. **Diagnose:** Analyze the errors and form a plan.
+3. **Fix & Verify:** Address one issue at a time, explaining my fix.
+4. **Update Tracker:** Mark the issue as fixed in `errorTODO.md` once you confirm the solution works.
+5. **Clean Up:** Once all bugs in the file are resolved and verified, I will clear the file.
 
 ## UI Development Guidelines
 - Use **shadcn-vue** components and blocks wherever possible to ensure UI consistency and speed up development.

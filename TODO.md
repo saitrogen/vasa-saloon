@@ -34,6 +34,15 @@
         - [x] Implement a function to save/update collection data to the `daily_collections` table.
         - [x] Add a "Save" button to trigger the persistence logic.
 - [ ] **Basic Expense Tracking**
+    - [ ] **Expense Model & State**
+        - [x] Define `Expense` and `ExpenseCategory` types in `types/index.ts`.
+        - [x] Create `expenseService.ts` with functions to fetch/save expenses and categories.
+        - [x] Create `expenseStore.ts` (Pinia) to manage expense state.
+    - [ ] **Expense View UI**
+        - [x] Create a new `ExpensesView.vue` component and add it to the router.
+        - [x] Design the UI with a category selector and a table for expense entries.
+        - [x] Implement a form to add new expense entries.
+        - [x] Display a list of expenses for the selected category.
+        - [x] Add logic to calculate and display the total for the expenses shown.
 - [ ] **Simple Summary Calculations**
 - [ ] **Deployment**
- 

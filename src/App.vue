@@ -3,12 +3,11 @@ import { computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import AppLayout from '@/layouts/AppLayout.vue'
-import { useAuth } from '@/composables/useAuth'
-import { supabase } from '@/lib/supabaseClient'
+import { useAuth } from '@/stores/auth'
 import { useTheme } from '@/composables/useTheme'
 
 const route = useRoute()
-const { setUser, setSession } = useAuth()
+const authStore = useAuth()
 useTheme() // Initialize theme management
 
 const layout = computed(() => {
@@ -18,17 +17,9 @@ const layout = computed(() => {
   return DefaultLayout
 })
 
-// Listen for auth state changes
+// Check authentication status when the app loads
 onMounted(() => {
-  supabase.auth.getSession().then(({ data }) => {
-    setSession(data.session)
-    setUser(data.session?.user ?? null)
-  })
-
-  supabase.auth.onAuthStateChange((_event, session) => {
-    setSession(session)
-    setUser(session?.user ?? null)
-  })
+  authStore.checkAuth()
 })
 </script>
 

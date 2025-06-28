@@ -43,6 +43,21 @@ export const staffService = {
     return data
   },
 
+  async getStaffProfileByUserId(userId: string): Promise<Staff | null> {
+    const { data, error } = await supabase
+      .from('staff')
+      .select('*')
+      .eq('user_id', userId)
+      .single()
+
+    if (error && error.code !== 'PGRST116') { // Ignore "0 rows" error
+      console.error('Error fetching staff profile:', error)
+      throw error
+    }
+
+    return data
+  },
+
   // Note: Create and Delete operations will be added in a later phase
   // as they involve more complex logic (e.g., creating auth users).
 } 

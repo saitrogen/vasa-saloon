@@ -1,15 +1,19 @@
 <script setup lang="ts">
 import { RouterView, RouterLink, useRouter } from 'vue-router'
 import { Button } from '@/components/ui/button'
-import { useAuth } from '@/composables/useAuth'
+import { useAuth } from '@/stores/auth'
 import ThemeToggle from '@/components/ThemeToggle.vue'
 
-const { logout } = useAuth()
 const router = useRouter()
+const authStore = useAuth()
 
 const handleLogout = async () => {
-  await logout()
-  router.push({ name: 'login' })
+  try {
+    await authStore.logout()
+    router.push({ name: 'login' })
+  } catch (error) {
+    console.error('Logout failed:', error)
+  }
 }
 </script>
 
@@ -53,7 +57,7 @@ const handleLogout = async () => {
         </div>
         <div class="flex items-center gap-4">
           <ThemeToggle />
-          <Button variant="outline" @click="handleLogout">Logout</Button>
+          <Button @click="handleLogout" variant="ghost">Logout</Button>
         </div>
       </header>
       <main class="flex-1 overflow-hidden bg-background">

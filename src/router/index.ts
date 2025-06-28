@@ -1,6 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuth } from '@/stores/auth'
 import HomeView from '../views/HomeView.vue'
-import { supabase } from '@/lib/supabaseClient'
+import LoginView from '../views/LoginView.vue'
+import DashboardView from '../views/DashboardView.vue'
+import CollectionsView from '../views/CollectionsView.vue'
+import ExpensesView from '../views/ExpensesView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,37 +20,47 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (LoginView.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('../views/LoginView.vue')
+      component: LoginView
     },
     {
       path: '/dashboard',
       name: 'dashboard',
-      component: () => import('../views/DashboardView.vue'),
+      component: DashboardView,
       meta: { requiresAuth: true, layout: 'App' }
     },
     {
       path: '/collections',
       name: 'collections',
-      component: () => import('../views/CollectionsView.vue'),
+      component: CollectionsView,
       meta: { requiresAuth: true, layout: 'App' }
+    },
+    {
+      path: '/expenses',
+      name: 'expenses',
+      component: ExpensesView,
+      meta: { requiresAuth: true }
     }
   ]
 })
 
 // Navigation guard to protect authenticated routes
-router.beforeEach(async (to, from, next) => {
-  const { data: { session } } = await supabase.auth.getSession()
+router.beforeEach((to, _from, next) => {
+  // We need to ensure the auth store is initialized before we can use it.
+  // This is a bit tricky outside of a component setup.
+  // For now, we assume it's initialized by App.vue
+  // A more robust solution might involve a plugin or initializing the store here.
+  const authStore = useAuth()
+  const isLoggedIn = authStore.isLoggedIn
 
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
 
-  if (requiresAuth && !session) {
-    // If route requires auth and there is no session, redirect to login
+  if (requiresAuth && !isLoggedIn) {
+    // If route requires auth and user is not logged in, redirect to login
     next({ name: 'login' })
-  } else if (!requiresAuth && session && to.name === 'login') {
+  } else if (to.name === 'login' && isLoggedIn) {
     // If user is logged in and tries to access login page, redirect to dashboard
-    next({ name: 'dashboard'})
-  }
-  else {
+    next({ name: 'dashboard' })
+  } else {
     // Otherwise, proceed
     next()
   }
