@@ -86,7 +86,7 @@ const grandTotal = computed(() => {
   return Object.values(dailyTotals.value).reduce((sum, val) => sum + val, 0)
 })
 
-const handleSave = () => {
+const handleSave = async () => {
   const collectionsToSave = Object.entries(collections.value).flatMap(([day, staffData]) =>
     Object.entries(staffData).map(([staff_id, amount]) => ({
       day: Number(day),
@@ -95,7 +95,10 @@ const handleSave = () => {
     }))
   )
   // The store expects a 1-indexed month
-  collectionStore.saveCollections(selectedYear.value, selectedMonth.value + 1, collectionsToSave)
+  await collectionStore.saveCollections(selectedYear.value, selectedMonth.value + 1, collectionsToSave)
+  // Explicitly fetch and re-initialize after save
+  await collectionStore.fetchCollections(selectedYear.value, selectedMonth.value)
+  initializeCollections()
 }
 
 const initializeCollections = () => {
@@ -114,14 +117,16 @@ const initializeCollections = () => {
   collections.value = newCollections
 }
 
+// Effect to fetch data when dependencies change
 watchEffect(() => {
   if (staff.value.length > 0) {
     collectionStore.fetchCollections(selectedYear.value, selectedMonth.value)
   }
 })
 
+// Effect to rebuild the UI grid when its data changes
 watchEffect(() => {
-  if (staff.value.length > 0 && daysInMonth.value.length > 0) {
+  if (staff.value.length > 0 && daysInMonth.value.length > 0 && fetchedCollections.value) {
     initializeCollections()
   }
 })
