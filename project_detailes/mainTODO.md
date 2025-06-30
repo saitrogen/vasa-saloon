@@ -56,42 +56,42 @@
   - **Priority:** Medium | **Estimated:** 1 day
 
 ### 📊 Daily Collection Module
-- [ ] **Core Collection Interface**
-  - [ ] Design daily collection table component
-  - [ ] Implement month/year selector
-  - [ ] Create 31-day calendar grid
-  - [ ] Add staff columns (KAMARU, SAKEER, ASIYAS, SHIBU, NAJMU, SAMAD)
+- [x] **Core Collection Interface**
+  - [x] Design daily collection table component
+  - [x] Implement month/year selector
+  - [x] Create 31-day calendar grid
+  - [x] Add staff columns (KAMARU, SAKEER, ASIYAS, SHIBU, NAJMU, SAMAD)
   - **Priority:** High | **Estimated:** 3 days
 
-- [ ] **Collection Logic & Calculations**
-  - [ ] Implement auto-calculating daily totals
-  - [ ] Add monthly total calculations
-  - [ ] Create useFinancialCalculations composable
-  - [ ] Add input validation for numeric values
-  - [ ] Real-time calculation updates
+- [x] **Collection Logic & Calculations**
+  - [x] Implement auto-calculating daily totals
+  - [x] Add monthly total calculations
+  - [x] Create useFinancialCalculations composable
+  - [x] Add input validation for numeric values
+  - [x] Real-time calculation updates
   - **Priority:** High | **Estimated:** 2 days
 
-- [ ] **Data Persistence**
-  - [ ] Create daily_collections table operations
-  - [ ] Implement auto-save functionality
-  - [ ] Add data synchronization
-  - [ ] Handle offline/online state
+- [x] **Data Persistence**
+  - [x] Create daily_collections table operations
+  - [x] Implement auto-save functionality
+  - [x] Add data synchronization
+  - [x] Handle offline/online state
   - **Priority:** High | **Estimated:** 2 days
 
 ### 💰 Basic Expense Management
-- [ ] **Expense Categories Setup**
-  - [ ] Create expense categories (Tissue, Car, Water, etc.)
-  - [ ] Design expense category interface
-  - [ ] Implement category CRUD operations
-  - [ ] Set up expense categories store
+- [x] **Expense Categories Setup**
+  - [x] Create expense categories (Tissue, Car, Water, etc.)
+  - [x] Design expense category interface
+  - [x] Implement category CR operations (update & delete later)
+  - [x] Set up expense categories store
   - **Priority:** Medium | **Estimated:** 1 day
 
-- [ ] **Expense Entry Interface**
-  - [ ] Create expense entry forms
-  - [ ] Implement dynamic row addition
-  - [ ] Add date picker integration
-  - [ ] Category-specific input validation
-  - [ ] Auto-calculating subtotals
+- [x] **Expense Entry Interface**
+  - [x] Create expense entry forms
+  - [x] Implement dynamic row addition
+  - [x] Add date picker integration
+  - [x] Category-specific input validation
+  - [x] Auto-calculating subtotals
   - **Priority:** Medium | **Estimated:** 3 days
 
 ### 📈 Simple Summary & Calculations

@@ -15,30 +15,30 @@
     - [x] Update `App.vue` to use the theme provider.
     - [x] Create a `ThemeToggle.vue` component.
     - [x] Add the `ThemeToggle` to the `AppLayout.vue` header.
-- [ ] **Daily Collection Module**
-    - [ ] **Core Collection Interface**
+- [x] **Daily Collection Module**
+    - [x] **Core Collection Interface**
         - [x] Create a new `CollectionsView.vue` component and add it to the router.
         - [x] Install `Data Table`, `Select`, and other necessary `shadcn-vue` components.
         - [x] Design the UI with a month/year selector and a placeholder for the collections table.
         - [x] Fetch the staff list using the `useStaffStore`.
         - [x] Dynamically generate the table columns based on the staff list.
         - [x] Statically generate the 31-day calendar rows in the table.
-    - [ ] **Collection Logic & Calculations**
+    - [x] **Collection Logic & Calculations**
         - [x] Create a reactive data structure to hold the collection values.
         - [x] Implement a function to calculate the total for each day (row total).
         - [x] Implement a function to calculate the total for each staff member (column total).
         - [x] Implement a function to calculate the grand total for the month.
         - [x] Make all calculations update in real-time as input values change.
-    - [ ] **Data Persistence**
+    - [x] **Data Persistence**
         - [x] Implement a function to fetch existing collection data for the selected month/year.
         - [x] Implement a function to save/update collection data to the `daily_collections` table.
         - [x] Add a "Save" button to trigger the persistence logic.
-- [ ] **Basic Expense Tracking**
-    - [ ] **Expense Model & State**
+- [x] **Basic Expense Tracking**
+    - [x] **Expense Model & State**
         - [x] Define `Expense` and `ExpenseCategory` types in `types/index.ts`.
         - [x] Create `expenseService.ts` with functions to fetch/save expenses and categories.
         - [x] Create `expenseStore.ts` (Pinia) to manage expense state.
-    - [ ] **Expense View UI**
+    - [x] **Expense View UI**
         - [x] Create a new `ExpensesView.vue` component and add it to the router.
         - [x] Design the UI with a category selector and a table for expense entries.
         - [x] Implement a form to add new expense entries.

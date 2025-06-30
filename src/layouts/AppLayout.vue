@@ -3,6 +3,12 @@ import { RouterView, RouterLink, useRouter } from 'vue-router'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/stores/auth'
 import ThemeToggle from '@/components/ThemeToggle.vue'
+import AppSidebar from '@/components/AppSidebar.vue'
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from '@/components/ui/sidebar'
 
 const router = useRouter()
 const authStore = useAuth()
@@ -18,51 +24,43 @@ const handleLogout = async () => {
 </script>
 
 <template>
-  <div class="flex h-screen bg-background text-foreground">
-    <!-- Sidebar -->
-    <aside class="w-64 bg-card border-r border-border">
-      <div class="px-6 py-4">
-        <RouterLink to="/dashboard" class="text-2xl font-bold">VASA Saloon</RouterLink>
-      </div>
-      <nav class="mt-6">
-        <RouterLink to="/dashboard"
-          class="flex items-center px-6 py-2 mt-4 text-muted-foreground hover:bg-accent hover:text-accent-foreground">
-          Dashboard
-        </RouterLink>
-        <RouterLink to="/collections"
-          class="flex items-center px-6 py-2 mt-4 text-muted-foreground hover:bg-accent hover:text-accent-foreground">
-          Daily Collections
-        </RouterLink>
-        <RouterLink to="/expenses"
-          class="flex items-center px-6 py-2 mt-4 text-muted-foreground hover:bg-accent hover:text-accent-foreground">
-          Expenses
-        </RouterLink>
-        <RouterLink to="/payroll"
-          class="flex items-center px-6 py-2 mt-4 text-muted-foreground hover:bg-accent hover:text-accent-foreground">
-          Payroll
-        </RouterLink>
-        <RouterLink to="/summary"
-          class="flex items-center px-6 py-2 mt-4 text-muted-foreground hover:bg-accent hover:text-accent-foreground">
-          Summary
-        </RouterLink>
-      </nav>
-    </aside>
 
-    <!-- Main Content -->
-    <div class="flex-1 flex flex-col overflow-hidden">
-      <header class="flex justify-between items-center p-4 bg-card border-b border-border">
+  <!-- Sidebar -->
+  <SidebarProvider>
+    <AppSidebar />
+    <SidebarInset>
+      <header class="flex h-16 shrink-0 items-center gap-2 px-4">
+        <SidebarTrigger class="-ml-1" />
         <div>
-          <!-- Placeholder for breadcrumbs or page title -->
           <h1 class="text-xl font-semibold">Dashboard</h1>
         </div>
-        <div class="flex items-center gap-4">
+        <div class="flex flex-1 justify-end items-center gap-4">
           <ThemeToggle />
-          <Button @click="handleLogout" variant="ghost">Logout</Button>
+          <Button @click="handleLogout" variant="outline">Logout</Button>
         </div>
       </header>
-      <main class="flex-1 overflow-hidden bg-background">
-        <RouterView />
-      </main>
-    </div>
-  </div>
+      <!-- 
+      <div class="flex h-screen bg-background text-foreground">
+        <div class="flex-1 flex flex-col overflow-hidden">
+          <header class="flex justify-between items-center p-4 bg-card border-b border-border">
+            <div>
+              
+              <h1 class="text-xl font-semibold">Dashboard</h1>
+            </div>
+            <div class="flex items-center gap-4">
+              <ThemeToggle />
+              <Button @click="handleLogout" variant="ghost">Logout</Button>
+            </div>
+          </header>
+          <main class="flex-1 overflow-hidden bg-background">
+            
+          </main>
+        </div>
+      </div>
+ -->
+      <RouterView />
+    </SidebarInset>
+  </SidebarProvider>
+
+
 </template>

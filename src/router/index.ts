@@ -38,7 +38,7 @@ const router = createRouter({
       path: '/expenses',
       name: 'expenses',
       component: ExpensesView,
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: true, layout: 'App' }
     }
   ]
 })
