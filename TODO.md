@@ -38,11 +38,20 @@
         - [x] Define `Expense` and `ExpenseCategory` types in `types/index.ts`.
         - [x] Create `expenseService.ts` with functions to fetch/save expenses and categories.
         - [x] Create `expenseStore.ts` (Pinia) to manage expense state.
-    - [x] **Expense View UI**
+    - [ ] **Expense View UI Polish**
         - [x] Create a new `ExpensesView.vue` component and add it to the router.
         - [x] Design the UI with a category selector and a table for expense entries.
         - [x] Implement a form to add new expense entries.
         - [x] Display a list of expenses for the selected category.
         - [x] Add logic to calculate and display the total for the expenses shown.
-- [ ] **Simple Summary Calculations**
+        - [x] Wire up Edit/Delete buttons in the expense table to trigger dialogs.
+        - [x] Implement the content and layout for the "Edit Expense" dialog.
+        - [x] Implement the content for the "Delete Expense" confirmation dialog.
+        - [x] Ensure real-time table updates after add/edit/delete operations.
+- [x] **Simple Summary Calculations**
+- [ ] **Automate Payroll Calculation**
+  - [ ] Create `salaryService.ts` to handle database operations.
+  - [ ] Update `collectionStore` to trigger salary calculation after saving collections.
+  - [ ] Implement logic to calculate 50% salary based on each staff member's monthly total.
+  - [ ] Ensure calculated salaries are saved to the `salaries` table.
 - [ ] **Deployment**

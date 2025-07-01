@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref} from 'vue'
 import { expenseService } from '@/services/expenseService'
 import { monthlyRecordService } from '@/services/monthlyRecordService'
 import type { Expense, ExpenseCategory, NewExpense } from '@/types'
@@ -49,12 +49,50 @@ export const useExpenseStore = defineStore('expenses', () => {
         monthly_record_id: monthlyRecord.id,
       }
 
-      const newExpense = await expenseService.createExpense(expenseToSave)
-      expenses.value.push(newExpense)
+      const newExpenseData = await expenseService.createExpense(expenseToSave)
+      
+      // Manually add category name to avoid re-fetch.
+      // The service now returns the joined category name.
+      const newExpenseWithCategory = {
+        ...newExpenseData,
+      }
+
+      expenses.value.push(newExpenseWithCategory)
     } catch (err: any) {
       console.error('Error in store addExpense:', err)
       error.value = err.message || 'Failed to add expense'
       // Re-throw the error if you want the component to handle it as well
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function updateExpense(id: string, updates: Partial<Expense>) {
+    loading.value = true
+    error.value = null
+    try {
+      const updatedExpense = await expenseService.updateExpense(id, updates)
+      const index = expenses.value.findIndex(e => e.id === id)
+      if (index !== -1) {
+        expenses.value[index] = { ...expenses.value[index], ...updatedExpense }
+      }
+    } catch (err: any) {
+      error.value = err.message || 'Failed to update expense'
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function deleteExpense(id: string) {
+    loading.value = true
+    error.value = null
+    try {
+      await expenseService.deleteExpense(id)
+      expenses.value = expenses.value.filter(e => e.id !== id)
+    } catch (err: any) {
+      error.value = err.message || 'Failed to delete expense'
       throw err
     } finally {
       loading.value = false
@@ -69,5 +107,7 @@ export const useExpenseStore = defineStore('expenses', () => {
     fetchExpenses,
     fetchCategories,
     addExpense,
+    updateExpense,
+    deleteExpense,
   }
 }) 

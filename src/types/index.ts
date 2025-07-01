@@ -44,6 +44,8 @@ export interface Expense {
   expense_categories: { name: string } | null
 }
 
+export type NewExpense = Omit<Expense, 'id' | 'created_at' | 'updated_at' | 'expense_categories'>
+
 export interface MonthlyRecord {
   id: string
   year: number
@@ -51,4 +53,12 @@ export interface MonthlyRecord {
   status: 'draft' | 'completed' | 'locked'
   created_at: string
   updated_at: string
+}
+
+export interface Salary {
+  id: string;
+  monthly_record_id: string;
+  staff_id: string;
+  full_amount: number;
+  half_amount: number;
 }

@@ -39,11 +39,11 @@ async function getExpensesByMonth(year: number, month: number): Promise<Expense[
   return data as any[] || []
 }
 
-async function createExpense(expense: Omit<Expense, 'id' | 'created_at' | 'updated_at'>): Promise<Expense> {
+async function createExpense(expense: Expense): Promise<Expense> {
   const { data, error } = await supabase
     .from('expenses')
     .insert(expense)
-    .select()
+    .select(`*, expense_categories ( name )`)
     .single()
   
   if (error) {
@@ -53,8 +53,37 @@ async function createExpense(expense: Omit<Expense, 'id' | 'created_at' | 'updat
   return data
 }
 
+async function updateExpense(id: string, updates: Partial<Expense>): Promise<Expense> {
+  const { data, error } = await supabase
+    .from('expenses')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single()
+
+  if (error) {
+    console.error('Error updating expense:', error)
+    throw error
+  }
+  return data
+}
+
+async function deleteExpense(id: string): Promise<void> {
+  const { error } = await supabase
+    .from('expenses')
+    .delete()
+    .eq('id', id)
+
+  if (error) {
+    console.error('Error deleting expense:', error)
+    throw error
+  }
+}
+
 export const expenseService = {
   getAllCategories,
   getExpensesByMonth,
   createExpense,
+  updateExpense,
+  deleteExpense,
 } 

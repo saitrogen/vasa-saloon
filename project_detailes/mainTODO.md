@@ -79,35 +79,43 @@
   - **Priority:** High | **Estimated:** 2 days
 
 ### 💰 Basic Expense Management
-- [x] **Expense Categories Setup**
+- [ ] **Expense Categories Setup**
   - [x] Create expense categories (Tissue, Car, Water, etc.)
   - [x] Design expense category interface
   - [x] Implement category CR operations (update & delete later)
   - [x] Set up expense categories store
   - **Priority:** Medium | **Estimated:** 1 day
 
-- [x] **Expense Entry Interface**
-  - [x] Create expense entry forms
-  - [x] Implement dynamic row addition
+- [ ] **Expense Entry Interface**
+  - [x] Create expense entry form for adding new expenses.
   - [x] Add date picker integration
   - [x] Category-specific input validation
   - [x] Auto-calculating subtotals
+  - [ ] Add action buttons (Edit, Delete) to the expenses table.
+  - [ ] Implement "Edit Expense" dialog with form.
+  - [ ] Implement "Delete Expense" confirmation dialog.
   - **Priority:** Medium | **Estimated:** 3 days
 
 ### 📈 Simple Summary & Calculations
-- [ ] **Basic Financial Summary**
-  - [ ] Create summary calculation logic
-  - [ ] Implement total collection calculations
-  - [ ] Add total expenses calculations
-  - [ ] Create basic final balance formula
+- [x] **Basic Financial Summary**
+  - [x] Create summary calculation logic
+  - [x] Implement total collection calculations
+  - [x] Add total expenses calculations
+  - [x] Create basic final balance formula
   - **Priority:** Medium | **Estimated:** 2 days
 
-- [ ] **Summary Display Interface**
-  - [ ] Design summary dashboard
-  - [ ] Create summary cards/widgets
-  - [ ] Add basic charts (pie chart for expenses)
-  - [ ] Implement real-time updates
+- [x] **Summary Display Interface**
+  - [x] Design summary dashboard
+  - [x] Create summary cards/widgets
+  - [x] Add basic charts (pie chart for expenses)
+  - [x] Implement real-time updates
   - **Priority:** Medium | **Estimated:** 2 days
+
+- [ ] **Automate Payroll Calculation**
+  - [ ] Create `salaryService.ts`
+  - [ ] Implement salary calculation logic
+  - [ ] Integrate with `saveCollections` flow
+  - **Priority:** High | **Estimated:** 1 day
 
 ---
 
@@ -140,6 +148,7 @@
 - [ ] **Advanced Expense Features**
   - [ ] Expense consolidation view
   - [ ] Expense history and filtering
+    - [ ] Upgrade to DataTable for advanced sorting/filtering
   - [ ] Expense approval workflow
   - [ ] Recurring expense templates
   - **Priority:** Medium | **Estimated:** 3 days
