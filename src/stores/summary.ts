@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import { useCollectionStore } from './collections'
 import { useExpenseStore } from './expense'
 import { useSalaryStore } from './salary'
-import type { ExpenseCategory } from '@/types'
+
 
 export const useSummaryStore = defineStore('summary', () => {
   const collectionStore = useCollectionStore()

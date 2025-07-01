@@ -53,7 +53,7 @@ export const useAuth = defineStore('auth', () => {
   }
   
   // This listener will handle auth state changes from other browser tabs or token refreshes
-  supabase.auth.onAuthStateChange((event, session) => {
+  supabase.auth.onAuthStateChange((_event, _session) => {
     checkAuth()
   })
 

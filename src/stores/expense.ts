@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref} from 'vue'
 import { expenseService } from '@/services/expenseService'
 import { monthlyRecordService } from '@/services/monthlyRecordService'
-import type { Expense, ExpenseCategory, NewExpense } from '@/types'
+import type { Expense, ExpenseCategory ,NewExpense } from '@/types'
 
 export const useExpenseStore = defineStore('expenses', () => {
   const expenses = ref<Expense[]>([])

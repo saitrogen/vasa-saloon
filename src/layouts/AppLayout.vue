@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { RouterView, RouterLink, useRouter } from 'vue-router'
+import { RouterView, useRouter } from 'vue-router'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/stores/auth'
 import ThemeToggle from '@/components/ThemeToggle.vue'

@@ -51,24 +51,24 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { MoreHorizontal } from 'lucide-vue-next'
-import { format, parseISO } from 'date-fns'
-import type { Expense, ExpenseCategory, NewExpense } from '@/types'
+import { format} from 'date-fns'
+import type { Expense, NewExpense } from '@/types'
 
 const expenseStore = useExpenseStore()
 const authStore = useAuth()
 
-const { expenses, categories, loading, error } = storeToRefs(expenseStore)
+const { expenses, categories, loading } = storeToRefs(expenseStore)
 
 const newExpense = ref<{
   date: Date,
   category_id: string,
   description: string,
-  amount: number | null,
+  amount: number | undefined,
 }>({
   date: new Date(),
   category_id: '',
   description: '',
-  amount: null,
+  amount: undefined,
 })
 
 const selectedExpense = ref<Expense | null>(null)
@@ -120,7 +120,7 @@ onMounted(() => {
 })
 
 const handleAddExpense = async () => {
-  if (!newExpense.value.category_id || !newExpense.value.amount) {
+  if (!newExpense.value.category_id || newExpense.value.amount == null) {
     alert('Please select a category and enter an amount.')
     return
   }
@@ -144,7 +144,7 @@ const handleAddExpense = async () => {
       date: new Date(),
       category_id: '',
       description: '',
-      amount: null,
+      amount: 0,
     }
     alert('Expense added successfully!')
   } catch (err) {
@@ -368,7 +368,7 @@ const totalExpenses = computed(() => {
           <div class="space-y-2">
             <Label for="edit-date">Date</Label>
             <DatePicker id="edit-date" :model-value="new Date(editFormData.date)"
-              @update:model-value="val => editFormData.date = format(val, 'yyyy-MM-dd')" />
+              @update:model-value="val => { if(val)editFormData.date = format(val, 'yyyy-MM-dd') }"/>
           </div>
           <div class="space-y-2">
             <Label for="edit-category">Category</Label>

@@ -3,7 +3,6 @@ import { type HTMLAttributes, computed } from 'vue'
 import {
   CalendarDate,
   DateFormatter,
-  type DateValue,
   getLocalTimeZone,
 } from '@internationalized/date'
 import { Calendar as CalendarIcon } from 'lucide-vue-next'

@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label'
 
 const email = ref('') // Default for easier testing
 const password = ref('') // Default for easier testing
-const loading = ref(false)
+// const loading = ref(false)
 const router = useRouter()
 const authStore = useAuth()
 const errorMessage = ref<string | null>(null)

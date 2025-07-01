@@ -2,11 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAuth } from '@/stores/auth'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
-import DashboardView from '../views/DashboardView.vue'
-import CollectionsView from '../views/CollectionsView.vue'
-import ExpensesView from '../views/ExpensesView.vue'
-import SummaryView from '../views/SummaryView.vue'
-import PayrollView from '../views/PayrollView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,31 +22,31 @@ const router = createRouter({
     {
       path: '/dashboard',
       name: 'dashboard',
-      component: DashboardView,
+      component: () => import('../views/DashboardView.vue'),
       meta: { requiresAuth: true, layout: 'App' }
     },
     {
       path: '/collections',
       name: 'collections',
-      component: CollectionsView,
+      component: () => import('../views/CollectionsView.vue'),
       meta: { requiresAuth: true, layout: 'App' }
     },
     {
       path: '/expenses',
       name: 'expenses',
-      component: ExpensesView,
+      component: () => import('../views/ExpensesView.vue'),
       meta: { requiresAuth: true, layout: 'App' }
     },
     {
       path: '/summary',
       name: 'summary',
-      component: SummaryView,
+      component: () => import('../views/SummaryView.vue'),
       meta: { requiresAuth: true, layout: 'App' }
     },
     {
       path: '/payroll',
       name: 'payroll',
-      component: PayrollView,
+      component: () => import('../views/PayrollView.vue'),
       meta: { requiresAuth: true, layout: 'App' }
     }
   ]

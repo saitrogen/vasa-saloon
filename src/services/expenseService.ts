@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabaseClient'
 import { startOfMonth, endOfMonth, formatISO } from 'date-fns'
-import type { Expense, ExpenseCategory } from '@/types'
+import type { Expense, ExpenseCategory ,NewExpense } from '@/types'
 
 // == Category Functions ==
 
@@ -39,7 +39,7 @@ async function getExpensesByMonth(year: number, month: number): Promise<Expense[
   return data as any[] || []
 }
 
-async function createExpense(expense: Expense): Promise<Expense> {
+async function createExpense(expense: NewExpense): Promise<Expense> {
   const { data, error } = await supabase
     .from('expenses')
     .insert(expense)
