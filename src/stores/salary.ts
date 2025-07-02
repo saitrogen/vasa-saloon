@@ -26,8 +26,9 @@ export const useSalaryStore = defineStore('salary', () => {
 
       const { data, error: fetchError } = await supabase
         .from('salaries')
-        .select('*, staff:staff_id ( name )')
+        .select('*, staff:staff_id!inner(name, is_trackable)')
         .eq('monthly_record_id', monthlyRecord.id)
+        .eq('staff.is_trackable', true)
 
       if (fetchError) throw fetchError
 

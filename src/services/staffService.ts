@@ -6,6 +6,8 @@ export const staffService = {
     const { data, error } = await supabase
       .from('staff')
       .select('*')
+      .eq('is_trackable', true)
+      .order('name', { ascending: true })
 
     if (error) {
       console.error('Error fetching staff:', error)

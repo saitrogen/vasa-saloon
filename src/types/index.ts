@@ -7,6 +7,7 @@ export interface Staff {
   hire_date: string; // Using string to represent date from DB
   role: 'admin' | 'manager' | 'staff';
   is_active: boolean;
+  is_trackable: boolean;
   created_at: string;
   updated_at: string;
 }

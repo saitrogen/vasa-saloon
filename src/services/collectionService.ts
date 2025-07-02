@@ -3,22 +3,21 @@ import { startOfMonth, endOfMonth, formatISO } from 'date-fns'
 import type { DailyCollection } from '@/types'
 
 async function getCollectionsByMonth(year: number, month: number): Promise<DailyCollection[]> {
-  const startDate = formatISO(startOfMonth(new Date(year, month)), { representation: 'date' })
-  const endDate = formatISO(endOfMonth(new Date(year, month)), { representation: 'date' })
+  const startDate = new Date(year, month, 1).toISOString()
+  const endDate = new Date(year, month + 1, 0).toISOString()
 
   const { data, error } = await supabase
     .from('daily_collections')
-    .select('*')
+    .select('*, staff:staff_id!inner(is_trackable)')
     .gte('date', startDate)
     .lte('date', endDate)
+    .eq('staff.is_trackable', true)
 
   if (error) {
     console.error('Error fetching collections:', error)
     throw error
   }
-
-  // Supabase may return null even without an error
-  return data || []
+  return data
 }
 
 async function saveCollections(collections: Omit<DailyCollection, 'id' | 'created_at' | 'updated_at'>[]): Promise<DailyCollection[]> {
