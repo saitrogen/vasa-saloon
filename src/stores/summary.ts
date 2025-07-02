@@ -2,13 +2,10 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useCollectionStore } from './collections'
 import { useExpenseStore } from './expense'
-import { useSalaryStore } from './salary'
-
 
 export const useSummaryStore = defineStore('summary', () => {
   const collectionStore = useCollectionStore()
   const expenseStore = useExpenseStore()
-  const salaryStore = useSalaryStore()
 
   const loading = ref(false)
   const error = ref<Error | null>(null)
@@ -23,7 +20,7 @@ export const useSummaryStore = defineStore('summary', () => {
   })
 
   const totalSalary = computed(() => {
-    return salaryStore.salaries.reduce((sum, item) => sum + item.half_amount, 0)
+    return totalCollection.value * 0.5
   })
 
   const expensesByCategory = computed(() => {
@@ -57,7 +54,6 @@ export const useSummaryStore = defineStore('summary', () => {
         collectionStore.fetchCollections(year, month),
         expenseStore.fetchExpenses(year, month),
         expenseStore.fetchCategories(),
-        salaryStore.fetchSalaries(year, month),
       ])
     } catch (e) {
       error.value = e as Error

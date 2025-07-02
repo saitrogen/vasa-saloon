@@ -48,10 +48,24 @@
         - [x] Implement the content and layout for the "Edit Expense" dialog.
         - [x] Implement the content for the "Delete Expense" confirmation dialog.
         - [x] Ensure real-time table updates after add/edit/delete operations.
+- [x] **PDF Report Generation**
+  - [x] Install `jspdf` and `html2canvas`.
+  - [x] Create a `ReportTemplate.vue` component for the PDF layout.
+    - [x] Add table for daily collections.
+    - [x] Add table for expenses.
+    - [x] Add section for product sales.
+    - [x] Add final summary section.
+  - [x] Create a `PdfPreviewDialog.vue` component to show the generated PDF.
+  - [x] Add a "Generate Report" button to `SummaryView.vue`.
+  - [x] Implement logic to render the template, generate the PDF, and show the preview.
 - [x] **Simple Summary Calculations**
 - [ ] **Automate Payroll Calculation**
   - [ ] Create `salaryService.ts` to handle database operations.
-  - [ ] Update `collectionStore` to trigger salary calculation after saving collections.
-  - [ ] Implement logic to calculate 50% salary based on each staff member's monthly total.
-  - [ ] Ensure calculated salaries are saved to the `salaries` table.
+  - [x] Update `collectionStore` to trigger salary calculation after saving collections.
+  - [x] Implement logic to calculate 50% salary based on each staff member's monthly total.
+  - [x] Ensure calculated salaries are saved to the `salaries` table.
+
+- [x] **Simple Dashboard**
+  - [x] Create a simple dashboard view.
+  - [x] Display key metrics: Total Collections, Total Expenses, and Net Balance.
 - [ ] **Deployment**

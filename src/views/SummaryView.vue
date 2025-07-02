@@ -1,14 +1,28 @@
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, nextTick, createApp, h } from 'vue'
 import { storeToRefs } from 'pinia'
+import jsPDF from 'jspdf'
+import html2canvas from 'html2canvas-pro'
 import { useSummaryStore } from '@/stores/summary'
+import { useCollectionStore } from '@/stores/collections'
+import { useExpenseStore } from '@/stores/expense'
+import { useStaffStore } from '@/stores/staff'
+import { useSalaryStore } from '@/stores/salary'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue, SelectLabel } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Button } from '@/components/ui/button'
+import PdfPreviewDialog from '@/components/PdfPreviewDialog.vue'
+import ReportTemplate from '@/components/ReportTemplate.vue'
 
 const summaryStore = useSummaryStore()
+const collectionStore = useCollectionStore()
+const expenseStore = useExpenseStore()
+const staffStore = useStaffStore()
+const salaryStore = useSalaryStore()
+
 const {
   totalCollection,
   totalExpenses,
@@ -18,6 +32,11 @@ const {
   expensesByCategory,
   loading,
 } = storeToRefs(summaryStore)
+
+const { collections } = storeToRefs(collectionStore)
+const { expenses, categories } = storeToRefs(expenseStore)
+const { staffList: staff } = storeToRefs(staffStore)
+const { salaries } = storeToRefs(salaryStore)
 
 const years = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i)
 const months = [
@@ -38,6 +57,10 @@ const months = [
 const selectedYear = ref(new Date().getFullYear())
 const selectedMonth = ref(new Date().getMonth())
 
+const isGeneratingPdf = ref(false)
+const pdfUrl = ref<string | null>(null)
+const showPdfPreview = ref(false)
+
 watch([selectedYear, selectedMonth], () => {
   summaryStore.fetchSummaryData(selectedYear.value, selectedMonth.value)
 }, { immediate: true })
@@ -56,6 +79,76 @@ const productSalesInput = computed({
     productSales.value = Number(value) || 0
   },
 })
+
+async function generateReport() {
+  isGeneratingPdf.value = true
+  showPdfPreview.value = true
+  pdfUrl.value = null
+
+  // Ensure all data is fetched
+  await staffStore.fetchAllStaff()
+  await nextTick()
+
+  const reportContainer = document.createElement('div')
+  reportContainer.style.position = 'absolute'
+  reportContainer.style.left = '-9999px'
+  reportContainer.style.top = '-9999px'
+  reportContainer.style.width = '1024px'
+  document.body.appendChild(reportContainer)
+
+  const reportProps = {
+    collections: collections.value,
+    expenses: expenses.value,
+    salaries: salaries.value,
+    staff: staff.value,
+    categories: categories.value,
+    productSales: productSales.value,
+    totalCollection: totalCollection.value,
+    totalExpenses: totalExpenses.value,
+    totalSalary: totalSalary.value,
+    finalBalance: finalBalance.value,
+    selectedMonth: selectedMonth.value,
+    selectedYear: selectedYear.value,
+  };
+
+  const app = createApp({
+    render: () => h(ReportTemplate, reportProps)
+  });
+  app.mount(reportContainer);
+
+
+  await nextTick()
+
+  try {
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+    const elements = reportContainer.querySelectorAll('.table-no-break');
+    let yPosition = 10;
+
+    for (const element of Array.from(elements)) {
+      const canvas = await html2canvas(element as HTMLElement, { scale: 2, useCORS: true });
+      const imgData = canvas.toDataURL('image/png');
+      const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      if (yPosition + imgHeight > pdfHeight - 15) { // Check if it fits, with margin
+        pdf.addPage();
+        yPosition = 10; // Reset for new page
+      }
+      pdf.addImage(imgData, 'PNG', 5, yPosition, pdfWidth - 10, imgHeight);
+      yPosition += imgHeight + 5; // Move to next position
+    }
+
+    const blob = pdf.output('blob');
+    pdfUrl.value = URL.createObjectURL(blob);
+  } catch (error) {
+    console.error('Error generating PDF:', error)
+  } finally {
+    isGeneratingPdf.value = false
+    document.body.removeChild(reportContainer)
+    app.unmount();
+  }
+}
 </script>
 
 <template>
@@ -89,6 +182,9 @@ const productSalesInput = computed({
             </SelectGroup>
           </SelectContent>
         </Select>
+        <Button @click="generateReport" :disabled="isGeneratingPdf">
+          {{ isGeneratingPdf ? 'Generating...' : 'Generate Report' }}
+        </Button>
       </div>
     </div>
 
@@ -207,7 +303,7 @@ const productSalesInput = computed({
               <div class="flex justify-between items-center text-lg font-bold border-t pt-2 mt-2">
                 <span>Final Balance</span>
                 <span :class="finalBalance >= 0 ? 'text-green-500' : 'text-red-500'">{{ formatCurrency(finalBalance)
-                  }}</span>
+                }}</span>
               </div>
             </div>
           </div>
@@ -233,5 +329,7 @@ const productSalesInput = computed({
         </CardContent>
       </Card>
     </div>
+    <PdfPreviewDialog v-model="showPdfPreview" :pdf-url="pdfUrl"
+      :title="`Financial_Report_${selectedYear}_${selectedMonth + 1}`" />
   </div>
 </template>
