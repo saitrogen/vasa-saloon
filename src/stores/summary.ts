@@ -1,15 +1,16 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { useCollectionStore } from './collections'
 import { useExpenseStore } from './expense'
+import { useProductSaleStore } from './productSales'
 
 export const useSummaryStore = defineStore('summary', () => {
   const collectionStore = useCollectionStore()
   const expenseStore = useExpenseStore()
+  const productSaleStore = useProductSaleStore()
 
-  const loading = ref(false)
-  const error = ref<Error | null>(null)
-  const productSales = ref(0)
+  const loading = computed(() => collectionStore.loading || expenseStore.loading)
+  const error = computed(() => collectionStore.error || expenseStore.error)
 
   const totalCollection = computed(() => {
     return collectionStore.collections.reduce((sum, item) => sum + item.amount, 0)
@@ -17,6 +18,10 @@ export const useSummaryStore = defineStore('summary', () => {
 
   const totalExpenses = computed(() => {
     return expenseStore.expenses.reduce((sum, item) => sum + item.amount, 0)
+  })
+  
+  const productSalesTotal = computed(() => {
+    return productSaleStore.sales.reduce((sum, item) => sum + Number(item.amount), 0)
   })
 
   const totalSalary = computed(() => {
@@ -40,26 +45,21 @@ export const useSummaryStore = defineStore('summary', () => {
   })
 
   const finalBalance = computed(() => {
-    const totalIncome = totalCollection.value + productSales.value
+    const totalIncome = totalCollection.value + productSalesTotal.value
     const totalDeductions = totalExpenses.value + totalSalary.value
     return totalIncome - totalDeductions
   })
 
   async function fetchSummaryData(year: number, month: number) {
-    loading.value = true
-    error.value = null
-    productSales.value = 0
-    try {
-      await Promise.all([
-        collectionStore.fetchCollections(year, month),
-        expenseStore.fetchExpenses(year, month),
-        expenseStore.fetchCategories(),
-      ])
-    } catch (e) {
-      error.value = e as Error
-    } finally {
-      loading.value = false
-    }
+    // This store now primarily computes based on other stores,
+    // so we just need to trigger fetches in other stores.
+    // The actual fetch calls are now in the view.
+    await Promise.all([
+      collectionStore.fetchCollections(year, month),
+      expenseStore.fetchExpenses(year, month),
+      expenseStore.fetchCategories(),
+      productSaleStore.fetchSales(year, month),
+    ])
   }
 
   return {
@@ -68,7 +68,7 @@ export const useSummaryStore = defineStore('summary', () => {
     totalCollection,
     totalExpenses,
     totalSalary,
-    productSales,
+    productSalesTotal,
     expensesByCategory,
     finalBalance,
     fetchSummaryData,

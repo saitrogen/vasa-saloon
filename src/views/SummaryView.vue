@@ -1,42 +1,49 @@
 <script setup lang="ts">
-import { ref, watch, computed, nextTick, createApp, h } from 'vue'
+import { ref, watch, nextTick, createApp, h } from 'vue'
 import { storeToRefs } from 'pinia'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas-pro'
+import { formatISO } from 'date-fns'
+
 import { useSummaryStore } from '@/stores/summary'
 import { useCollectionStore } from '@/stores/collections'
 import { useExpenseStore } from '@/stores/expense'
 import { useStaffStore } from '@/stores/staff'
 import { useSalaryStore } from '@/stores/salary'
+import { useProductSaleStore } from '@/stores/productSales'
+import { monthlyRecordService } from '@/services/monthlyRecordService'
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue, SelectLabel } from '@/components/ui/select'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableEmpty } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
 import PdfPreviewDialog from '@/components/PdfPreviewDialog.vue'
 import ReportTemplate from '@/components/ReportTemplate.vue'
+import ProductSaleForm from '@/components/ProductSaleForm.vue'
+import type { ProductSale } from '@/types'
 
 const summaryStore = useSummaryStore()
 const collectionStore = useCollectionStore()
 const expenseStore = useExpenseStore()
 const staffStore = useStaffStore()
 const salaryStore = useSalaryStore()
+const productSaleStore = useProductSaleStore()
 
 const {
   totalCollection,
   totalExpenses,
   totalSalary,
   finalBalance,
-  productSales,
   expensesByCategory,
-  loading,
+  loading: summaryLoading,
 } = storeToRefs(summaryStore)
 
 const { collections } = storeToRefs(collectionStore)
 const { expenses, categories } = storeToRefs(expenseStore)
 const { staffList: staff } = storeToRefs(staffStore)
 const { salaries } = storeToRefs(salaryStore)
+const { sales: productSales, loading: salesLoading } = storeToRefs(productSaleStore)
 
 const years = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i)
 const months = [
@@ -61,8 +68,41 @@ const isGeneratingPdf = ref(false)
 const pdfUrl = ref<string | null>(null)
 const showPdfPreview = ref(false)
 
+// CRUD state for Product Sales
+const showSaleForm = ref(false)
+const selectedSale = ref<ProductSale | null>(null)
+
+function openSaleForm(sale: ProductSale | null = null) {
+  selectedSale.value = sale
+  showSaleForm.value = true
+}
+
+async function handleSaveSale(formValues: any) {
+  const monthlyRecord = await monthlyRecordService.getOrCreateMonthlyRecord(selectedYear.value, selectedMonth.value)
+  const saleData = {
+    ...formValues,
+    amount: Number(formValues.amount),
+    date: formatISO(formValues.date, { representation: 'date' }),
+    monthly_record_id: monthlyRecord.id,
+  }
+
+  if (selectedSale.value) {
+    await productSaleStore.updateSale(selectedSale.value.id, saleData)
+  } else {
+    await productSaleStore.addSale(saleData)
+  }
+  showSaleForm.value = false
+}
+
+async function handleDeleteSale(id: string) {
+  if (confirm('Are you sure you want to delete this sale?')) {
+    await productSaleStore.deleteSale(id)
+  }
+}
+
 watch([selectedYear, selectedMonth], () => {
   summaryStore.fetchSummaryData(selectedYear.value, selectedMonth.value)
+  productSaleStore.fetchSales(selectedYear.value, selectedMonth.value)
 }, { immediate: true })
 
 const formatCurrency = (value: number) => {
@@ -72,13 +112,6 @@ const formatCurrency = (value: number) => {
     minimumFractionDigits: 2,
   }).format(value)
 }
-
-const productSalesInput = computed({
-  get: () => productSales.value,
-  set: (value) => {
-    productSales.value = Number(value) || 0
-  },
-})
 
 async function generateReport() {
   isGeneratingPdf.value = true
@@ -188,7 +221,7 @@ async function generateReport() {
       </div>
     </div>
 
-    <div v-if="loading" class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+    <div v-if="summaryLoading" class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
       <Card>
         <CardHeader>
           <Skeleton class="h-6 w-3/4" />
@@ -273,14 +306,42 @@ async function generateReport() {
         <CardContent class="grid gap-6 md:grid-cols-2">
           <!-- Left Side: Product Sales & Calculation -->
           <div class="space-y-4">
-            <div class="space-y-2">
-              <Label for="product-sales">Additional Income (Product Sales)</Label>
-              <Input id="product-sales" type="number" placeholder="Enter amount from product sales"
-                v-model="productSalesInput" />
-              <p class="text-xs text-muted-foreground">
-                Enter any extra income, like product sales, for this month.
-              </p>
-            </div>
+            <Card>
+              <CardHeader class="flex flex-row items-center justify-between pb-2">
+                <CardTitle class="text-base font-medium">Additional Income (Product Sales)</CardTitle>
+                <Button size="sm" @click="openSaleForm()">Add Sale</Button>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Product</TableHead>
+                      <TableHead>Date</TableHead>
+                      <TableHead class="text-right">Amount</TableHead>
+                      <TableHead class="w-[140px] text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow v-if="salesLoading">
+                      <TableCell colspan="4" class="h-24 text-center">Loading...</TableCell>
+                    </TableRow>
+                    <TableEmpty v-else-if="!productSales.length" :colspan="4">
+                      No product sales recorded for this month.
+                    </TableEmpty>
+                    <TableRow v-for="sale in productSales" :key="sale.id">
+                      <TableCell class="font-medium">{{ sale.name }}</TableCell>
+                      <TableCell>{{ new Date(sale.date).toLocaleDateString() }}</TableCell>
+                      <TableCell class="text-right">{{ formatCurrency(sale.amount) }}</TableCell>
+                      <TableCell class="text-right">
+                        <Button variant="ghost" size="icon" class="h-8 w-8" @click="openSaleForm(sale)">Edit</Button>
+                        <Button variant="ghost" size="icon" class="h-8 w-8 text-red-500"
+                          @click="handleDeleteSale(sale.id)">Delete</Button>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
 
             <div class="space-y-2 rounded-lg border p-4">
               <h3 class="font-semibold">Calculation</h3>
@@ -290,7 +351,7 @@ async function generateReport() {
               </div>
               <div class="flex justify-between items-center text-sm">
                 <span class="text-muted-foreground">Product Sales</span>
-                <span class="font-medium text-green-500">+ {{ formatCurrency(productSales) }}</span>
+                <span class="font-medium text-green-500">+ {{ formatCurrency(summaryStore.productSalesTotal) }}</span>
               </div>
               <div class="flex justify-between items-center text-sm">
                 <span class="text-muted-foreground">Total Salary</span>
@@ -303,7 +364,7 @@ async function generateReport() {
               <div class="flex justify-between items-center text-lg font-bold border-t pt-2 mt-2">
                 <span>Final Balance</span>
                 <span :class="finalBalance >= 0 ? 'text-green-500' : 'text-red-500'">{{ formatCurrency(finalBalance)
-                  }}</span>
+                }}</span>
               </div>
             </div>
           </div>
@@ -312,7 +373,8 @@ async function generateReport() {
           <div class="space-y-2">
             <h3 class="font-semibold">Expenses by Category</h3>
             <div class="space-y-2 rounded-lg border p-4">
-              <div v-if="expensesByCategory.length === 0" class="text-center text-muted-foreground py-4">
+              <div v-if="expenseStore.loading" class="text-center text-muted-foreground py-4">Loading expenses...</div>
+              <div v-else-if="expensesByCategory.length === 0" class="text-center text-muted-foreground py-4">
                 No expenses recorded for this month.
               </div>
               <div v-else v-for="cat in expensesByCategory" :key="cat.name"
@@ -331,5 +393,6 @@ async function generateReport() {
     </div>
     <PdfPreviewDialog v-model="showPdfPreview" :pdf-url="pdfUrl"
       :title="`Financial_Report_${selectedYear}_${selectedMonth + 1}`" />
+    <ProductSaleForm v-model="showSaleForm" :sale="selectedSale" @save="handleSaveSale" />
   </div>
 </template>

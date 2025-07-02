@@ -63,3 +63,14 @@ export interface Salary {
   full_amount: number;
   half_amount: number;
 }
+
+export interface ProductSale {
+  id: string;
+  monthly_record_id: string;
+  name: string;
+  description?: string;
+  amount: number;
+  date: string; // YYYY-MM-DD
+  created_at: string;
+  updated_at: string;
+}

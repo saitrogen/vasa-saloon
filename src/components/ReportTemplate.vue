@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { DailyCollection, Expense, ExpenseCategory, Staff, Salary } from '@/types'
+import type { DailyCollection, Expense, ExpenseCategory, Staff, Salary, ProductSale } from '@/types'
 
 interface Props {
   collections: DailyCollection[]
@@ -7,7 +7,7 @@ interface Props {
   salaries: Salary[]
   staff: Staff[]
   categories: ExpenseCategory[]
-  productSales: number
+  productSales: ProductSale[]
   totalCollection: number
   totalExpenses: number
   totalSalary: number
@@ -18,10 +18,10 @@ interface Props {
 
 defineProps<Props>()
 
-const getStaffName = (staffId: string, staffList: Staff[]) => {
-  const member = staffList.find(s => s.id === staffId)
-  return member ? member.name : 'Unknown'
-}
+// const getStaffName = (staffId: string, staffList: Staff[]) => {
+//   const member = staffList.find(s => s.id === staffId)
+//   return member ? member.name : 'Unknown'
+// }
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('en-AE', {
@@ -159,6 +159,36 @@ const getStaffSalary = (staffId: string, reportData: Record<string, Record<numbe
       </table>
     </div>
 
+    <!-- Product Sales Table -->
+    <div class="mb-8 table-no-break">
+      <h3 class="text-lg font-bold mb-2">Product Sales</h3>
+      <table class="w-full border-collapse border border-gray-400 text-sm">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="border border-gray-300 p-2">Date</th>
+            <th class="border border-gray-300 p-2">Product</th>
+            <th class="border border-gray-300 p-2">Description</th>
+            <th class="border border-gray-300 p-2 text-right">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="sale in productSales" :key="sale.id">
+            <td class="border border-gray-300 p-2">{{ new Date(sale.date).toLocaleDateString() }}</td>
+            <td class="border border-gray-300 p-2">{{ sale.name }}</td>
+            <td class="border border-gray-300 p-2">{{ sale.description }}</td>
+            <td class="border border-gray-300 p-2 text-right">{{ formatNumber(sale.amount) }}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr class="bg-gray-200 font-bold">
+            <td colspan="3" class="border border-gray-300 p-2 text-right">Total Product Sales</td>
+            <td class="border border-gray-300 p-2 text-right">{{formatCurrency(productSales.reduce((sum, s) => sum +
+              s.amount, 0))}}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
     <!-- Salaries Table -->
     <div class="mb-8 table-no-break">
       <h3 class="text-lg font-bold mb-2">Salaries</h3>
@@ -197,7 +227,7 @@ const getStaffSalary = (staffId: string, reportData: Record<string, Record<numbe
         </div>
         <div class="flex justify-between py-1">
           <span>Product Sales:</span>
-          <span class="font-bold">{{ formatCurrency(productSales) }}</span>
+          <span class="font-bold">{{formatCurrency(productSales.reduce((sum, s) => sum + s.amount, 0))}}</span>
         </div>
         <div class="flex justify-between py-1 text-red-600">
           <span>Total Expenses:</span>
