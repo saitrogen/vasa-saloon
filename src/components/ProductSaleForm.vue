@@ -44,22 +44,23 @@ const [date, dateAttrs] = defineField('date')
 
 watch(() => props.modelValue, (isOpen) => {
   if (isOpen) {
+    let values = {};
     if (props.sale) {
-      setValues({
+      values = {
         ...props.sale,
-        date: new Date(props.sale.date)
-      })
+        date: props.sale.date instanceof Date ? props.sale.date : new Date(props.sale.date)
+      }
+      console.log('[ProductSaleForm] Dialog opened for edit, setting values:', values)
     } else {
-      resetForm({
-        values: {
-          date: new Date(),
-        },
-      })
+      values = { date: new Date() }
+      console.log('[ProductSaleForm] Dialog opened for add, setting values:', values)
     }
+    resetForm({ values })
   }
 })
 
 const onSubmit = handleSubmit(async (values) => {
+  console.log('[ProductSaleForm] Emitting save with values:', values)
   emit('save', values)
 })
 

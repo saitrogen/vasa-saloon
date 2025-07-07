@@ -3,7 +3,7 @@ import { ref, watch, nextTick, createApp, h } from 'vue'
 import { storeToRefs } from 'pinia'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas-pro'
-import { formatISO } from 'date-fns'
+
 
 import { useSummaryStore } from '@/stores/summary'
 import { useCollectionStore } from '@/stores/collections'
@@ -11,7 +11,6 @@ import { useExpenseStore } from '@/stores/expense'
 import { useStaffStore } from '@/stores/staff'
 import { useSalaryStore } from '@/stores/salary'
 import { useProductSaleStore } from '@/stores/productSales'
-import { monthlyRecordService } from '@/services/monthlyRecordService'
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue, SelectLabel } from '@/components/ui/select'
@@ -20,8 +19,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
 import PdfPreviewDialog from '@/components/PdfPreviewDialog.vue'
 import ReportTemplate from '@/components/ReportTemplate.vue'
-import ProductSaleForm from '@/components/ProductSaleForm.vue'
-import type { ProductSale } from '@/types'
+
 
 const summaryStore = useSummaryStore()
 const collectionStore = useCollectionStore()
@@ -67,38 +65,6 @@ const selectedMonth = ref(new Date().getMonth())
 const isGeneratingPdf = ref(false)
 const pdfUrl = ref<string | null>(null)
 const showPdfPreview = ref(false)
-
-// CRUD state for Product Sales
-const showSaleForm = ref(false)
-const selectedSale = ref<ProductSale | null>(null)
-
-function openSaleForm(sale: ProductSale | null = null) {
-  selectedSale.value = sale
-  showSaleForm.value = true
-}
-
-async function handleSaveSale(formValues: any) {
-  const monthlyRecord = await monthlyRecordService.getOrCreateMonthlyRecord(selectedYear.value, selectedMonth.value)
-  const saleData = {
-    ...formValues,
-    amount: Number(formValues.amount),
-    date: formatISO(formValues.date, { representation: 'date' }),
-    monthly_record_id: monthlyRecord.id,
-  }
-
-  if (selectedSale.value) {
-    await productSaleStore.updateSale(selectedSale.value.id, saleData)
-  } else {
-    await productSaleStore.addSale(saleData)
-  }
-  showSaleForm.value = false
-}
-
-async function handleDeleteSale(id: string) {
-  if (confirm('Are you sure you want to delete this sale?')) {
-    await productSaleStore.deleteSale(id)
-  }
-}
 
 watch([selectedYear, selectedMonth], () => {
   summaryStore.fetchSummaryData(selectedYear.value, selectedMonth.value)
@@ -309,7 +275,6 @@ async function generateReport() {
             <Card>
               <CardHeader class="flex flex-row items-center justify-between pb-2">
                 <CardTitle class="text-base font-medium">Additional Income (Product Sales)</CardTitle>
-                <Button size="sm" @click="openSaleForm()">Add Sale</Button>
               </CardHeader>
               <CardContent>
                 <Table>
@@ -318,25 +283,19 @@ async function generateReport() {
                       <TableHead>Product</TableHead>
                       <TableHead>Date</TableHead>
                       <TableHead class="text-right">Amount</TableHead>
-                      <TableHead class="w-[140px] text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     <TableRow v-if="salesLoading">
-                      <TableCell colspan="4" class="h-24 text-center">Loading...</TableCell>
+                      <TableCell colspan="3" class="h-24 text-center">Loading...</TableCell>
                     </TableRow>
-                    <TableEmpty v-else-if="!productSales.length" :colspan="4">
+                    <TableEmpty v-else-if="!productSales.length" :colspan="3">
                       No product sales recorded for this month.
                     </TableEmpty>
                     <TableRow v-for="sale in productSales" :key="sale.id">
                       <TableCell class="font-medium">{{ sale.name }}</TableCell>
                       <TableCell>{{ new Date(sale.date).toLocaleDateString() }}</TableCell>
                       <TableCell class="text-right">{{ formatCurrency(sale.amount) }}</TableCell>
-                      <TableCell class="text-right">
-                        <Button variant="ghost" size="icon" class="h-8 w-8" @click="openSaleForm(sale)">Edit</Button>
-                        <Button variant="ghost" size="icon" class="h-8 w-8 text-red-500"
-                          @click="handleDeleteSale(sale.id)">Delete</Button>
-                      </TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
@@ -393,6 +352,5 @@ async function generateReport() {
     </div>
     <PdfPreviewDialog v-model="showPdfPreview" :pdf-url="pdfUrl"
       :title="`Financial_Report_${selectedYear}_${selectedMonth + 1}`" />
-    <ProductSaleForm v-model="showSaleForm" :sale="selectedSale" @save="handleSaveSale" />
   </div>
 </template>

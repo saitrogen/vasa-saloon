@@ -35,15 +35,18 @@ export const useProductSaleStore = defineStore('productSales', () => {
   }
 
   async function updateSale(id: string, updates: Partial<ProductSale>) {
+    console.log('[productSales store] updateSale called with id:', id, 'updates:', updates)
     loading.value = true
     error.value = null
     try {
       const updatedSale = await productSaleService.updateSale(id, updates)
+      console.log('[productSales store] updateSale result:', updatedSale)
       const index = sales.value.findIndex(s => s.id === id)
       if (index !== -1) {
         sales.value[index] = updatedSale
       }
     } catch (e) {
+      console.error('[productSales store] updateSale error:', e)
       error.value = e as Error
       throw e
     } finally {

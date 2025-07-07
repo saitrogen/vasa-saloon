@@ -54,12 +54,12 @@ export const useSummaryStore = defineStore('summary', () => {
     // This store now primarily computes based on other stores,
     // so we just need to trigger fetches in other stores.
     // The actual fetch calls are now in the view.
-    await Promise.all([
-      collectionStore.fetchCollections(year, month),
-      expenseStore.fetchExpenses(year, month),
-      expenseStore.fetchCategories(),
+      await Promise.all([
+        collectionStore.fetchCollections(year, month),
+        expenseStore.fetchExpenses(year, month),
+        expenseStore.fetchCategories(),
       productSaleStore.fetchSales(year, month),
-    ])
+      ])
   }
 
   return {

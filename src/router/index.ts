@@ -48,6 +48,12 @@ const router = createRouter({
       name: 'payroll',
       component: () => import('../views/PayrollView.vue'),
       meta: { requiresAuth: true, layout: 'App' }
+    },
+    {
+      path: '/sales',
+      name: 'sales',
+      component: () => import('../views/SalesView.vue'),
+      meta: { requiresAuth: true, layout: 'App' }
     }
   ]
 })

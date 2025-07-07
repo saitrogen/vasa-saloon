@@ -30,6 +30,10 @@ const navMain = [
     url: '/expenses',
   },
   {
+    title: 'Product Sales',
+    url: '/sales',
+  },
+  {
     title: 'Payroll',
     url: '/payroll',
   },
