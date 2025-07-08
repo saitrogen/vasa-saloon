@@ -33,7 +33,7 @@ const saleSchema = toTypedSchema(z.object({
   date: z.date({ required_error: 'A date is required.' })
 }))
 
-const { handleSubmit, isSubmitting, setValues, resetForm, errors, defineField } = useForm({
+const { handleSubmit, isSubmitting, resetForm, errors, defineField } = useForm({
   validationSchema: saleSchema,
 })
 
@@ -48,7 +48,7 @@ watch(() => props.modelValue, (isOpen) => {
     if (props.sale) {
       values = {
         ...props.sale,
-        date: props.sale.date instanceof Date ? props.sale.date : new Date(props.sale.date)
+        date: typeof props.sale.date === 'string' ? new Date(props.sale.date) : props.sale.date
       }
     } else {
       values = { date: new Date() }
