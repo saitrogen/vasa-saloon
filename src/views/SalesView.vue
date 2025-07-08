@@ -39,7 +39,6 @@ function openSaleForm(sale: ProductSale | null = null) {
 }
 
 async function handleSaveSale(formValues: any) {
-  console.log('[SalesView] handleSaveSale called with:', formValues)
   const monthlyRecord = await monthlyRecordService.getOrCreateMonthlyRecord(selectedYear.value, selectedMonth.value)
   let saleData = {
     ...formValues,
@@ -49,21 +48,15 @@ async function handleSaveSale(formValues: any) {
   }
   if (selectedSale.value) {
     saleData = { ...saleData, id: selectedSale.value.id }
-    console.log('[SalesView] Updating sale:', saleData)
     try {
       await productSaleStore.updateSale(selectedSale.value.id, saleData)
-      console.log('[SalesView] updateSale completed')
     } catch (e) {
-      console.error('[SalesView] updateSale error:', e)
       alert('Failed to update sale. Please try again.')
     }
   } else {
-    console.log('[SalesView] Adding sale:', saleData)
     try {
       await productSaleStore.addSale(saleData)
-      console.log('[SalesView] addSale completed')
     } catch (e) {
-      console.error('[SalesView] addSale error:', e)
       alert('Failed to add sale. Please try again.')
     }
   }

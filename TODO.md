@@ -68,10 +68,10 @@
 - [x] **Simple Dashboard**
   - [x] Create a simple dashboard view.
   - [x] Display key metrics: Total Collections, Total Expenses, and Net Balance.
-- [ ] **Deployment**
 - [ ] **Product Sales Page**
     - [x] Create SalesView.vue
     - [x] Add route to router
     - [x] Add sidebar link
-    - [ ] Implement table and CRUD logic
-    - [ ] Polish UI and test
+    - [x] Implement table and CRUD logic
+    - [x] Polish UI and test
+- [ ] **Deployment**

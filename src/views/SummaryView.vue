@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, nextTick, createApp, h } from 'vue'
+import { ref, watch, nextTick, createApp, h, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas-pro'
@@ -148,6 +148,23 @@ async function generateReport() {
     app.unmount();
   }
 }
+
+// Group product sales by name (for categorised summary)
+const groupedProductSales = computed(() => {
+  const groups: Record<string, { name: string; total: number }> = {}
+  productSales.value.forEach(sale => {
+    if (!groups[sale.name]) {
+      groups[sale.name] = { name: sale.name, total: 0 }
+    }
+    groups[sale.name].total += sale.amount
+  })
+  return Object.values(groups)
+})
+
+// Total sales for the period (sum of all product sales)
+const totalProductSales = computed(() => {
+  return productSales.value.reduce((sum, sale) => sum + sale.amount, 0)
+})
 </script>
 
 <template>
@@ -277,25 +294,30 @@ async function generateReport() {
                 <CardTitle class="text-base font-medium">Additional Income (Product Sales)</CardTitle>
               </CardHeader>
               <CardContent>
+                <!-- Categorised Sales Summary Table -->
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead>Product</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead class="text-right">Amount</TableHead>
+                      <TableHead class="text-right">Total Amount</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     <TableRow v-if="salesLoading">
-                      <TableCell colspan="3" class="h-24 text-center">Loading...</TableCell>
+                      <TableCell colspan="2" class="h-24 text-center">Loading...</TableCell>
                     </TableRow>
-                    <TableEmpty v-else-if="!productSales.length" :colspan="3">
+                    <TableEmpty v-else-if="!groupedProductSales.length" :colspan="2">
                       No product sales recorded for this month.
                     </TableEmpty>
-                    <TableRow v-for="sale in productSales" :key="sale.id">
+                    <TableRow v-for="sale in groupedProductSales" :key="sale.name">
                       <TableCell class="font-medium">{{ sale.name }}</TableCell>
-                      <TableCell>{{ new Date(sale.date).toLocaleDateString() }}</TableCell>
-                      <TableCell class="text-right">{{ formatCurrency(sale.amount) }}</TableCell>
+                      <TableCell class="text-right">{{ formatCurrency(sale.total) }}</TableCell>
+                    </TableRow>
+                    <!-- Total Sales Row -->
+                    <TableRow v-if="groupedProductSales.length">
+                      <TableCell class="font-semibold border-t pt-2">Total Sales</TableCell>
+                      <TableCell class="text-right font-semibold border-t pt-2">{{ formatCurrency(totalProductSales) }}
+                      </TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
@@ -323,7 +345,7 @@ async function generateReport() {
               <div class="flex justify-between items-center text-lg font-bold border-t pt-2 mt-2">
                 <span>Final Balance</span>
                 <span :class="finalBalance >= 0 ? 'text-green-500' : 'text-red-500'">{{ formatCurrency(finalBalance)
-                }}</span>
+                  }}</span>
               </div>
             </div>
           </div>

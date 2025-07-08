@@ -35,7 +35,6 @@ async function addSale(sale: Omit<ProductSale, 'id' | 'created_at' | 'updated_at
 }
 
 async function updateSale(id: string, updates: Partial<ProductSale>): Promise<ProductSale> {
-  console.log('[productSaleService] updateSale called with id:', id, 'updates:', updates)
   const { data, error } = await supabase
     .from('product_sales')
     .update(updates)
@@ -47,7 +46,6 @@ async function updateSale(id: string, updates: Partial<ProductSale>): Promise<Pr
     console.error('[productSaleService] Error updating product sale:', error)
     throw error
   }
-  console.log('[productSaleService] updateSale response:', data)
   return data
 }
 

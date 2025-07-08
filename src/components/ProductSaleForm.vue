@@ -50,17 +50,14 @@ watch(() => props.modelValue, (isOpen) => {
         ...props.sale,
         date: props.sale.date instanceof Date ? props.sale.date : new Date(props.sale.date)
       }
-      console.log('[ProductSaleForm] Dialog opened for edit, setting values:', values)
     } else {
       values = { date: new Date() }
-      console.log('[ProductSaleForm] Dialog opened for add, setting values:', values)
     }
     resetForm({ values })
   }
 })
 
 const onSubmit = handleSubmit(async (values) => {
-  console.log('[ProductSaleForm] Emitting save with values:', values)
   emit('save', values)
 })
 
