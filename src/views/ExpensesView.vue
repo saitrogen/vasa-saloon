@@ -211,11 +211,11 @@ const totalExpenses = computed(() => {
 
 <template>
   <div class="p-6 space-y-6">
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
       <h1 class="text-3xl font-bold tracking-tight">Expenses</h1>
-      <div class="flex items-center space-x-4">
+      <div class="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
         <Select v-model="selectedCategoryFilter">
-          <SelectTrigger class="w-[180px]">
+          <SelectTrigger class="w-full sm:w-[180px]">
             <SelectValue placeholder="Filter by category..." />
           </SelectTrigger>
           <SelectContent>
@@ -229,7 +229,7 @@ const totalExpenses = computed(() => {
           </SelectContent>
         </Select>
         <Select v-model="selectedMonth">
-          <SelectTrigger class="w-[180px]">
+          <SelectTrigger class="w-full sm:w-[180px]">
             <SelectValue placeholder="Select a month" />
           </SelectTrigger>
           <SelectContent>
@@ -242,7 +242,7 @@ const totalExpenses = computed(() => {
           </SelectContent>
         </Select>
         <Select v-model="selectedYear">
-          <SelectTrigger class="w-[180px]">
+          <SelectTrigger class="w-full sm:w-[180px]">
             <SelectValue placeholder="Select a year" />
           </SelectTrigger>
           <SelectContent>
@@ -299,7 +299,7 @@ const totalExpenses = computed(() => {
       </Card>
 
       <!-- Expenses Table -->
-      <div class="w-full md:w-2/3">
+      <div class="w-full md:w-2/3 overflow-x-auto">
         <h2 class="text-2xl font-bold mb-4">Monthly Expenses</h2>
         <div class="border rounded-lg">
           <Table>

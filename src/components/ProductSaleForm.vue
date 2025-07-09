@@ -69,7 +69,7 @@ watch(() => props.sale, (newSale) => {
 
 <template>
   <Dialog :open="modelValue" @update:open="(value) => emit('update:modelValue', value)">
-    <DialogContent>
+    <DialogContent class="sm:max-w-md">
       <DialogHeader>
         <DialogTitle>{{ dialogTitle }}</DialogTitle>
         <DialogDescription>
@@ -77,24 +77,28 @@ watch(() => props.sale, (newSale) => {
         </DialogDescription>
       </DialogHeader>
       <form @submit="onSubmit" class="space-y-4">
-        <div>
-          <Label for="name">Product Name</Label>
-          <Input id="name" v-model="name" v-bind="nameAttrs" />
-          <p v-if="errors.name" class="text-red-500 text-xs mt-1">{{ errors.name }}</p>
-        </div>
-        <div>
-          <Label for="description">Description (Optional)</Label>
-          <Input id="description" v-model="description" v-bind="descriptionAttrs" />
-        </div>
-        <div>
-          <Label for="amount">Amount</Label>
-          <Input id="amount" type="number" step="0.01" v-model.number="amount" v-bind="amountAttrs" />
-          <p v-if="errors.amount" class="text-red-500 text-xs mt-1">{{ errors.amount }}</p>
-        </div>
-        <div>
-          <Label for="date">Date</Label>
-          <DatePicker v-model="date" v-bind="dateAttrs" />
-          <p v-if="errors.date" class="text-red-500 text-xs mt-1">{{ errors.date }}</p>
+        <div class="grid gap-4 py-4">
+          <div class="grid grid-cols-1 gap-4">
+            <div>
+              <Label for="name">Product Name</Label>
+              <Input id="name" v-model="name" v-bind="nameAttrs" />
+              <p v-if="errors.name" class="text-red-500 text-xs mt-1">{{ errors.name }}</p>
+            </div>
+            <div>
+              <Label for="description">Description (Optional)</Label>
+              <Input id="description" v-model="description" v-bind="descriptionAttrs" />
+            </div>
+            <div>
+              <Label for="amount">Amount</Label>
+              <Input id="amount" type="number" step="0.01" v-model.number="amount" v-bind="amountAttrs" />
+              <p v-if="errors.amount" class="text-red-500 text-xs mt-1">{{ errors.amount }}</p>
+            </div>
+            <div>
+              <Label for="date">Date</Label>
+              <DatePicker v-model="date" v-bind="dateAttrs" />
+              <p v-if="errors.date" class="text-red-500 text-xs mt-1">{{ errors.date }}</p>
+            </div>
+          </div>
         </div>
         <DialogFooter>
           <DialogClose as-child>

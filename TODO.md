@@ -75,3 +75,12 @@
     - [x] Implement table and CRUD logic
     - [x] Polish UI and test
 - [ ] **Deployment**
+
+- [ ] **Mobile Optimization**
+  - [x] Make `AppLayout.vue` responsive (e.g., collapsible sidebar).
+  - [x] Make the `CollectionsView.vue` table horizontally scrollable on small screens.
+  - [x] Make the `ExpensesView.vue` table horizontally scrollable on small screens.
+  - [x] Make the `SalesView.vue` table horizontally scrollable on small screens.
+  - [x] Make the `PayrollView.vue` table horizontally scrollable on small screens.
+  - [x] Adjust form layouts in dialogs for better mobile viewing.
+  - [x] Ensure all pages are usable and readable on a mobile device.

@@ -85,16 +85,16 @@ const formatCurrency = (value: number) => {
 
 <template>
   <div class="p-6 space-y-6">
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
       <h1 class="text-3xl font-bold tracking-tight">Product Sales</h1>
-      <div class="flex items-center space-x-4">
+      <div class="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
         <select v-model="selectedMonth" class="border rounded px-2 py-1">
           <option v-for="month in months" :key="month.value" :value="month.value">{{ month.label }}</option>
         </select>
         <select v-model="selectedYear" class="border rounded px-2 py-1">
           <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
         </select>
-        <Button @click="openSaleForm()">Add Sale</Button>
+        <Button @click="openSaleForm()" class="w-full sm:w-auto">Add Sale</Button>
       </div>
     </div>
     <Card>
@@ -102,38 +102,40 @@ const formatCurrency = (value: number) => {
         <CardTitle>Sales for {{ months[selectedMonth].label }} {{ selectedYear }}</CardTitle>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Date</TableHead>
-              <TableHead>Product</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead class="text-right">Amount</TableHead>
-              <TableHead class="w-[140px] text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow v-if="loading">
-              <TableCell colspan="5" class="h-24 text-center">Loading...</TableCell>
-            </TableRow>
-            <TableEmpty v-else-if="!sales.length" :colspan="5">
-              No product sales recorded for this month.
-            </TableEmpty>
-            <TableRow v-for="sale in sales" :key="sale.id">
-              <TableCell>{{ new Date(sale.date).toLocaleDateString() }}</TableCell>
-              <TableCell>{{ sale.name }}</TableCell>
-              <TableCell>{{ sale.description }}</TableCell>
-              <TableCell class="text-right">{{ formatCurrency(sale.amount) }}</TableCell>
-              <TableCell class="text-right">
-                <div class="flex justify-end space-x-2">
-                  <Button variant="ghost" size="icon" class="h-8 w-8" @click="openSaleForm(sale)">Edit</Button>
-                  <Button variant="ghost" size="icon" class="h-8 w-8 text-red-500"
-                    @click="handleDeleteSale(sale.id)">Delete</Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+        <div class="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Date</TableHead>
+                <TableHead>Product</TableHead>
+                <TableHead>Description</TableHead>
+                <TableHead class="text-right">Amount</TableHead>
+                <TableHead class="w-[140px] text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow v-if="loading">
+                <TableCell colspan="5" class="h-24 text-center">Loading...</TableCell>
+              </TableRow>
+              <TableEmpty v-else-if="!sales.length" :colspan="5">
+                No product sales recorded for this month.
+              </TableEmpty>
+              <TableRow v-for="sale in sales" :key="sale.id">
+                <TableCell>{{ new Date(sale.date).toLocaleDateString() }}</TableCell>
+                <TableCell>{{ sale.name }}</TableCell>
+                <TableCell>{{ sale.description }}</TableCell>
+                <TableCell class="text-right">{{ formatCurrency(sale.amount) }}</TableCell>
+                <TableCell class="text-right">
+                  <div class="flex justify-end space-x-2">
+                    <Button variant="ghost" size="icon" class="h-8 w-8" @click="openSaleForm(sale)">Edit</Button>
+                    <Button variant="ghost" size="icon" class="h-8 w-8 text-red-500"
+                      @click="handleDeleteSale(sale.id)">Delete</Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
       </CardContent>
     </Card>
     <ProductSaleForm v-model="showSaleForm" :sale="selectedSale" @save="handleSaveSale" />
