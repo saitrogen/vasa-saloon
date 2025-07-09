@@ -139,19 +139,19 @@ onMounted(() => {
 <template>
   <div class="h-full flex flex-col">
     <!-- Page Header -->
-    <div class="p-6">
-      <div class="flex items-center justify-between">
+    <div class="p-2 sm:p-4 md:p-6">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-0">
         <div>
-          <h2 class="text-3xl font-bold tracking-tight">
+          <h2 class="text-xl md:text-3xl font-bold tracking-tight">
             Daily Collections
           </h2>
-          <p class="text-sm text-muted-foreground">
+          <p class="text-xs md:text-sm text-muted-foreground">
             Here's a list of daily collections for this month.
           </p>
         </div>
-        <div class="flex items-center space-x-4">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:space-x-4">
           <Select v-model="selectedMonth">
-            <SelectTrigger class="w-[180px]">
+            <SelectTrigger class="w-full sm:w-[140px] h-9 text-sm">
               <SelectValue placeholder="Select a month" />
             </SelectTrigger>
             <SelectContent>
@@ -164,7 +164,7 @@ onMounted(() => {
             </SelectContent>
           </Select>
           <Select v-model="selectedYear">
-            <SelectTrigger class="w-[180px]">
+            <SelectTrigger class="w-full sm:w-[110px] h-9 text-sm">
               <SelectValue placeholder="Select a year" />
             </SelectTrigger>
             <SelectContent>
@@ -176,56 +176,81 @@ onMounted(() => {
               </SelectGroup>
             </SelectContent>
           </Select>
-          <Button @click="handleSave" :disabled="loading || staffLoading">
+          <Button @click="handleSave" :disabled="loading || staffLoading" class="w-full sm:w-auto h-9 px-3 text-sm">
             Save Collections
           </Button>
         </div>
       </div>
     </div>
 
-    <!-- Scrollable Table Area -->
-    <div class="flex-1 overflow-y-auto px-6">
+    <!-- Mobile Card/List View -->
+    <div class="flex-1 px-2 block md:hidden overflow-y-auto">
       <div v-if="loading || staffLoading" class="text-center py-12">
-        <p class="text-lg font-semibold">
+        <p class="text-base font-semibold">Loading data...</p>
+        <p class="text-xs text-muted-foreground">Please wait a moment.</p>
+      </div>
+      <div v-else class="space-y-3">
+        <div v-for="day in daysInMonth" :key="day" class="rounded-lg border p-3 bg-background">
+          <div class="flex items-center justify-between mb-2">
+            <span class="font-semibold">{{ months[selectedMonth].label }} {{ day }}, {{ selectedYear }}</span>
+            <span class="text-xs text-muted-foreground">Day {{ day }}</span>
+          </div>
+          <div class="space-y-2">
+            <div v-for="s in staff" :key="s.id" class="flex items-center justify-between">
+              <span class="text-sm">{{ s.name }}</span>
+              <Input type="number" class="w-20 text-xs" v-model.number="collections[day][s.id]" />
+            </div>
+          </div>
+          <div class="flex justify-between items-center mt-2 pt-2 border-t">
+            <span class="font-medium text-xs">Total</span>
+            <span class="font-bold">{{ dailyTotals[day] }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Desktop Table View -->
+    <div class="flex-1 overflow-y-auto px-2 sm:px-6 hidden md:block">
+      <div v-if="loading || staffLoading" class="text-center py-12">
+        <p class="text-base md:text-lg font-semibold">
           Loading data...
         </p>
-        <p class="text-muted-foreground">Please wait a moment.</p>
+        <p class="text-xs md:text-sm text-muted-foreground">Please wait a moment.</p>
       </div>
-      <Table v-else>
-        <TableHeader class="sticky top-0 bg-background">
-          <TableRow>
-            <TableHead class="w-[100px]">
-              Date
-            </TableHead>
-            <TableHead v-for="s in staff" :key="s.id">
-              {{ s.name.toUpperCase() }}
-            </TableHead>
-            <TableHead class="text-right">
-              Total
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow v-for="day in daysInMonth" :key="day">
-            <TableCell>{{ day }}</TableCell>
-            <TableCell v-for="s in staff" :key="s.id">
-              <Input type="number" class="w-20" v-model.number="collections[day][s.id]" />
-            </TableCell>
-            <TableCell class="font-bold text-right">{{ dailyTotals[day] }}</TableCell>
-          </TableRow>
-        </TableBody>
-        <TableFooter class="sticky bottom-0 bg-background">
-          <TableRow>
-            <TableCell class="font-bold">Total</TableCell>
-            <TableCell v-for="s in staff" :key="s.id" class="font-bold">
-              {{ staffTotals[s.id] }}
-            </TableCell>
-            <TableCell class="font-bold text-right">
-              {{ grandTotal }}
-            </TableCell>
-          </TableRow>
-        </TableFooter>
-      </Table>
+      <div v-else class="w-full overflow-x-auto">
+        <Table class="min-w-[600px]">
+          <TableHeader class="sticky top-0 bg-background">
+            <TableRow>
+              <TableHead class="w-[80px] md:w-[100px]">Date</TableHead>
+              <TableHead v-for="s in staff" :key="s.id">
+                {{ s.name.toUpperCase() }}
+              </TableHead>
+              <TableHead class="text-right">Total</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow v-for="day in daysInMonth" :key="day">
+              <TableCell>{{ day }}</TableCell>
+              <TableCell v-for="s in staff" :key="s.id">
+                <Input type="number" class="w-16 md:w-20 text-xs md:text-base"
+                  v-model.number="collections[day][s.id]" />
+              </TableCell>
+              <TableCell class="font-bold text-right">{{ dailyTotals[day] }}</TableCell>
+            </TableRow>
+          </TableBody>
+          <TableFooter class="sticky bottom-0 bg-background">
+            <TableRow>
+              <TableCell class="font-bold">Total</TableCell>
+              <TableCell v-for="s in staff" :key="s.id" class="font-bold">
+                {{ staffTotals[s.id] }}
+              </TableCell>
+              <TableCell class="font-bold text-right">
+                {{ grandTotal }}
+              </TableCell>
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </div>
     </div>
   </div>
 </template>

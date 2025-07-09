@@ -340,7 +340,7 @@ const totalProductSales = computed(() => {
               <div class="flex justify-between items-center text-lg font-bold border-t pt-2 mt-2">
                 <span>Final Balance</span>
                 <span :class="finalBalance >= 0 ? 'text-green-500' : 'text-red-500'">{{ formatCurrency(finalBalance)
-                }}</span>
+                  }}</span>
               </div>
             </div>
           </div>
