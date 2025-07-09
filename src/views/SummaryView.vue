@@ -14,7 +14,7 @@ import { useProductSaleStore } from '@/stores/productSales'
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue, SelectLabel } from '@/components/ui/select'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableEmpty } from '@/components/ui/table'
+
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
 import PdfPreviewDialog from '@/components/PdfPreviewDialog.vue'
@@ -41,7 +41,7 @@ const { collections } = storeToRefs(collectionStore)
 const { expenses, categories } = storeToRefs(expenseStore)
 const { staffList: staff } = storeToRefs(staffStore)
 const { salaries } = storeToRefs(salaryStore)
-const { sales: productSales, loading: salesLoading } = storeToRefs(productSaleStore)
+const { sales: productSales } = storeToRefs(productSaleStore)
 
 const years = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i)
 const months = [
@@ -168,12 +168,12 @@ const totalProductSales = computed(() => {
 </script>
 
 <template>
-  <div class="p-6 space-y-6">
-    <div class="flex items-center justify-between">
-      <h1 class="text-3xl font-bold tracking-tight">Monthly Summary</h1>
-      <div class="flex items-center space-x-4">
+  <div class="p-2 sm:p-4 md:p-6 space-y-4 md:space-y-6">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-0">
+      <h1 class="text-xl md:text-3xl font-bold tracking-tight">Monthly Summary</h1>
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:space-x-4">
         <Select v-model="selectedMonth">
-          <SelectTrigger class="w-[180px]">
+          <SelectTrigger class="w-full sm:w-[140px] h-9 text-sm">
             <SelectValue placeholder="Select a month" />
           </SelectTrigger>
           <SelectContent>
@@ -186,7 +186,7 @@ const totalProductSales = computed(() => {
           </SelectContent>
         </Select>
         <Select v-model="selectedYear">
-          <SelectTrigger class="w-[180px]">
+          <SelectTrigger class="w-full sm:w-[110px] h-9 text-sm">
             <SelectValue placeholder="Select a year" />
           </SelectTrigger>
           <SelectContent>
@@ -198,134 +198,129 @@ const totalProductSales = computed(() => {
             </SelectGroup>
           </SelectContent>
         </Select>
-        <Button @click="generateReport" :disabled="isGeneratingPdf">
+        <Button @click="generateReport" :disabled="isGeneratingPdf" class="w-full sm:w-auto h-9 px-3 text-sm">
           {{ isGeneratingPdf ? 'Generating...' : 'Generate Report' }}
         </Button>
       </div>
     </div>
 
-    <div v-if="summaryLoading" class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-      <Card>
+    <div v-if="summaryLoading" class="grid gap-3 md:gap-6 grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
+      <Card class="p-2 md:p-4">
         <CardHeader>
-          <Skeleton class="h-6 w-3/4" />
+          <Skeleton class="h-5 w-3/4" />
         </CardHeader>
         <CardContent>
-          <Skeleton class="h-8 w-1/2" />
+          <Skeleton class="h-7 w-1/2" />
         </CardContent>
       </Card>
-      <Card>
+      <Card class="p-2 md:p-4">
         <CardHeader>
-          <Skeleton class="h-6 w-3/4" />
+          <Skeleton class="h-5 w-3/4" />
         </CardHeader>
         <CardContent>
-          <Skeleton class="h-8 w-1/2" />
+          <Skeleton class="h-7 w-1/2" />
         </CardContent>
       </Card>
-      <Card>
+      <Card class="p-2 md:p-4">
         <CardHeader>
-          <Skeleton class="h-6 w-3/4" />
+          <Skeleton class="h-5 w-3/4" />
         </CardHeader>
         <CardContent>
-          <Skeleton class="h-8 w-1/2" />
+          <Skeleton class="h-7 w-1/2" />
         </CardContent>
       </Card>
-      <Card class="col-span-full">
+      <Card class="col-span-2 md:col-span-2 lg:col-span-full p-2 md:p-4">
         <CardHeader>
-          <Skeleton class="h-6 w-1/4 mb-2" />
-          <Skeleton class="h-4 w-1/3" />
+          <Skeleton class="h-5 w-1/4 mb-2" />
+          <Skeleton class="h-3 w-1/3" />
         </CardHeader>
-        <CardContent class="grid gap-4 md:grid-cols-2">
-          <Skeleton class="h-10 w-full" />
-          <Skeleton class="h-10 w-full" />
+        <CardContent class="grid gap-3 md:gap-4 md:grid-cols-2">
+          <Skeleton class="h-8 w-full" />
+          <Skeleton class="h-8 w-full" />
         </CardContent>
       </Card>
     </div>
 
-    <div v-else class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+    <div v-else class="grid gap-2 md:gap-6 grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
       <!-- Top Level Cards -->
-      <Card>
-        <CardHeader>
-          <CardTitle>Total Collection</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p class="text-3xl font-bold text-green-500">{{ formatCurrency(totalCollection) }}</p>
+      <Card class="p-1 md:p-4 rounded-md">
+        <CardContent class="flex flex-col items-start justify-center py-2 px-3 md:py-4 md:px-6">
+          <span class="text-sm md:text-base font-medium text-muted-foreground mb-1">Total Collection</span>
+          <span class="text-base md:text-2xl font-bold text-green-500">{{ formatCurrency(totalCollection) }}</span>
         </CardContent>
       </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle>Total Salary (50%)</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p class="text-3xl font-bold text-orange-500">{{ formatCurrency(totalSalary) }}</p>
+      <Card class="p-1 md:p-4 rounded-md">
+        <CardContent class="flex flex-col items-start justify-center py-2 px-3 md:py-4 md:px-6">
+          <span class="text-sm md:text-base font-medium text-muted-foreground mb-1">Total Salary (50%)</span>
+          <span class="text-base md:text-2xl font-bold text-orange-500">{{ formatCurrency(totalSalary) }}</span>
         </CardContent>
       </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle>Total Expenses</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p class="text-3xl font-bold text-red-500">{{ formatCurrency(totalExpenses) }}</p>
+      <Card class="p-1 md:p-4 rounded-md">
+        <CardContent class="flex flex-col items-start justify-center py-2 px-3 md:py-4 md:px-6">
+          <span class="text-sm md:text-base font-medium text-muted-foreground mb-1">Total Expenses</span>
+          <span class="text-base md:text-2xl font-bold text-red-500">{{ formatCurrency(totalExpenses) }}</span>
         </CardContent>
       </Card>
-      <Card :class="finalBalance >= 0 ? 'border-green-500' : 'border-red-500'">
-        <CardHeader>
-          <CardTitle>Final Balance</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p class="text-3xl font-bold" :class="finalBalance >= 0 ? 'text-green-500' : 'text-red-500'">
+      <Card class="p-1 md:p-4 rounded-md" :class="finalBalance >= 0 ? 'border-green-500' : 'border-red-500'">
+        <CardContent class="flex flex-col items-start justify-center py-2 px-3 md:py-4 md:px-6">
+          <span class="text-sm md:text-base font-medium text-muted-foreground mb-1">Final Balance</span>
+          <span class="text-base md:text-2xl font-bold" :class="finalBalance >= 0 ? 'text-green-500' : 'text-red-500'">
             {{ formatCurrency(finalBalance) }}
-          </p>
+          </span>
         </CardContent>
       </Card>
 
       <!-- Detailed Info Card -->
-      <Card class="md:col-span-2 lg:col-span-4">
+      <Card class="col-span-2 md:col-span-2 lg:col-span-4">
         <CardHeader>
           <CardTitle>Financial Details</CardTitle>
           <CardDescription>
             Breakdown of income and expenses for the selected period.
           </CardDescription>
         </CardHeader>
-        <CardContent class="grid gap-6 md:grid-cols-2">
-          <!-- Left Side: Product Sales & Calculation -->
-          <div class="space-y-4">
-            <Card>
-              <CardHeader class="flex flex-row items-center justify-between pb-2">
-                <CardTitle class="text-base font-medium">Additional Income (Product Sales)</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <!-- Categorised Sales Summary Table -->
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Product</TableHead>
-                      <TableHead class="text-right">Total Amount</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    <TableRow v-if="salesLoading">
-                      <TableCell colspan="2" class="h-24 text-center">Loading...</TableCell>
-                    </TableRow>
-                    <TableEmpty v-else-if="!groupedProductSales.length" :colspan="2">
-                      No product sales recorded for this month.
-                    </TableEmpty>
-                    <TableRow v-for="sale in groupedProductSales" :key="sale.name">
-                      <TableCell class="font-medium">{{ sale.name }}</TableCell>
-                      <TableCell class="text-right">{{ formatCurrency(sale.total) }}</TableCell>
-                    </TableRow>
-                    <!-- Total Sales Row -->
-                    <TableRow v-if="groupedProductSales.length">
-                      <TableCell class="font-semibold border-t pt-2">Total Sales</TableCell>
-                      <TableCell class="text-right font-semibold border-t pt-2">{{ formatCurrency(totalProductSales) }}
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-
+        <CardContent class="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-2">
+          <!-- Right Side: Expenses by Category (move to top) -->
+          <div class="space-y-2 order-1 md:order-none">
+            <h3 class="font-semibold">Expenses by Category</h3>
             <div class="space-y-2 rounded-lg border p-4">
-              <h3 class="font-semibold">Calculation</h3>
+              <div v-if="expenseStore.loading" class="text-center text-muted-foreground py-4">Loading expenses...</div>
+              <div v-else-if="expensesByCategory.length === 0" class="text-center text-muted-foreground py-4">
+                No expenses recorded for this month.
+              </div>
+              <div v-else v-for="cat in expensesByCategory" :key="cat.name"
+                class="flex justify-between items-center text-sm">
+                <span class="text-muted-foreground">{{ cat.name }}</span>
+                <span class="font-medium">{{ formatCurrency(cat.total) }}</span>
+              </div>
+              <div class="flex justify-between items-center text-base font-semibold border-t pt-2 mt-2">
+                <span>Total Expenses</span>
+                <span>{{ formatCurrency(totalExpenses) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Left Side: Product Sales (now below expenses) -->
+          <div class="space-y-2 order-2 md:order-none">
+            <h3 class="font-semibold">Additional Income (Product Sales)</h3>
+            <div class="rounded-lg border p-4">
+              <div class="space-y-1">
+                <div v-for="sale in groupedProductSales" :key="sale.name"
+                  class="flex justify-between items-center text-sm">
+                  <span class="text-muted-foreground">{{ sale.name }}</span>
+                  <span class="font-medium">{{ formatCurrency(sale.total) }}</span>
+                </div>
+                <div class="flex justify-between items-center text-base font-semibold border-t pt-2 mt-2">
+                  <span>Total Sales</span>
+                  <span>{{ formatCurrency(totalProductSales) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Calculation card at the bottom -->
+          <div class="space-y-2 order-3 md:order-none">
+            <h3 class="font-semibold">Calculation</h3>
+            <div class="rounded-lg border p-4">
               <div class="flex justify-between items-center text-sm">
                 <span class="text-muted-foreground">Total Collection</span>
                 <span class="font-medium text-green-500">+ {{ formatCurrency(totalCollection) }}</span>
@@ -345,27 +340,7 @@ const totalProductSales = computed(() => {
               <div class="flex justify-between items-center text-lg font-bold border-t pt-2 mt-2">
                 <span>Final Balance</span>
                 <span :class="finalBalance >= 0 ? 'text-green-500' : 'text-red-500'">{{ formatCurrency(finalBalance)
-                  }}</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Right Side: Expenses by Category -->
-          <div class="space-y-2">
-            <h3 class="font-semibold">Expenses by Category</h3>
-            <div class="space-y-2 rounded-lg border p-4">
-              <div v-if="expenseStore.loading" class="text-center text-muted-foreground py-4">Loading expenses...</div>
-              <div v-else-if="expensesByCategory.length === 0" class="text-center text-muted-foreground py-4">
-                No expenses recorded for this month.
-              </div>
-              <div v-else v-for="cat in expensesByCategory" :key="cat.name"
-                class="flex justify-between items-center text-sm">
-                <span class="text-muted-foreground">{{ cat.name }}</span>
-                <span class="font-medium">{{ formatCurrency(cat.total) }}</span>
-              </div>
-              <div class="flex justify-between items-center text-base font-semibold border-t pt-2 mt-2">
-                <span>Total Expenses</span>
-                <span>{{ formatCurrency(totalExpenses) }}</span>
+                }}</span>
               </div>
             </div>
           </div>
