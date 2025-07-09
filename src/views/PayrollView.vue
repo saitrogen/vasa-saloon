@@ -42,11 +42,11 @@ const formatCurrency = (value: number) => {
 
 <template>
   <div class="p-6 space-y-6">
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
       <h1 class="text-3xl font-bold tracking-tight">Payroll</h1>
-      <div class="flex items-center space-x-4">
+      <div class="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
         <Select v-model="selectedMonth">
-          <SelectTrigger class="w-[180px]">
+          <SelectTrigger class="w-full sm:w-[180px]">
             <SelectValue placeholder="Select a month" />
           </SelectTrigger>
           <SelectContent>
@@ -59,7 +59,7 @@ const formatCurrency = (value: number) => {
           </SelectContent>
         </Select>
         <Select v-model="selectedYear">
-          <SelectTrigger class="w-[180px]">
+          <SelectTrigger class="w-full sm:w-[180px]">
             <SelectValue placeholder="Select a year" />
           </SelectTrigger>
           <SelectContent>
@@ -73,7 +73,7 @@ const formatCurrency = (value: number) => {
         </Select>
       </div>
     </div>
-    <div class="border rounded-lg">
+    <div class="border rounded-lg overflow-x-auto">
       <Table>
         <TableHeader>
           <TableRow>

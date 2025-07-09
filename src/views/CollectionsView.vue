@@ -140,7 +140,7 @@ onMounted(() => {
   <div class="h-full flex flex-col">
     <!-- Page Header -->
     <div class="p-6">
-      <div class="flex items-center justify-between">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
         <div>
           <h2 class="text-3xl font-bold tracking-tight">
             Daily Collections
@@ -149,34 +149,36 @@ onMounted(() => {
             Here's a list of daily collections for this month.
           </p>
         </div>
-        <div class="flex items-center space-x-4">
-          <Select v-model="selectedMonth">
-            <SelectTrigger class="w-[180px]">
-              <SelectValue placeholder="Select a month" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Months</SelectLabel>
-                <SelectItem v-for="month in months" :key="month.value" :value="month.value">
-                  {{ month.label }}
-                </SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          <Select v-model="selectedYear">
-            <SelectTrigger class="w-[180px]">
-              <SelectValue placeholder="Select a year" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Years</SelectLabel>
-                <SelectItem v-for="year in years" :key="year" :value="year">
-                  {{ year }}
-                </SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          <Button @click="handleSave" :disabled="loading || staffLoading">
+        <div class="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
+          <div class="flex items-center space-x-4">
+            <Select v-model="selectedMonth">
+              <SelectTrigger class="w-full sm:w-[180px]">
+                <SelectValue placeholder="Select a month" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Months</SelectLabel>
+                  <SelectItem v-for="month in months" :key="month.value" :value="month.value">
+                    {{ month.label }}
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <Select v-model="selectedYear">
+              <SelectTrigger class="w-full sm:w-[180px]">
+                <SelectValue placeholder="Select a year" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Years</SelectLabel>
+                  <SelectItem v-for="year in years" :key="year" :value="year">
+                    {{ year }}
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          <Button @click="handleSave" :disabled="loading || staffLoading" class="w-full sm:w-auto">
             Save Collections
           </Button>
         </div>
@@ -184,48 +186,50 @@ onMounted(() => {
     </div>
 
     <!-- Scrollable Table Area -->
-    <div class="flex-1 overflow-y-auto px-6">
+    <div class="flex-1 overflow-auto px-6">
       <div v-if="loading || staffLoading" class="text-center py-12">
         <p class="text-lg font-semibold">
           Loading data...
         </p>
         <p class="text-muted-foreground">Please wait a moment.</p>
       </div>
-      <Table v-else>
-        <TableHeader class="sticky top-0 bg-background">
-          <TableRow>
-            <TableHead class="w-[100px]">
-              Date
-            </TableHead>
-            <TableHead v-for="s in staff" :key="s.id">
-              {{ s.name.toUpperCase() }}
-            </TableHead>
-            <TableHead class="text-right">
-              Total
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow v-for="day in daysInMonth" :key="day">
-            <TableCell>{{ day }}</TableCell>
-            <TableCell v-for="s in staff" :key="s.id">
-              <Input type="number" class="w-20" v-model.number="collections[day][s.id]" />
-            </TableCell>
-            <TableCell class="font-bold text-right">{{ dailyTotals[day] }}</TableCell>
-          </TableRow>
-        </TableBody>
-        <TableFooter class="sticky bottom-0 bg-background">
-          <TableRow>
-            <TableCell class="font-bold">Total</TableCell>
-            <TableCell v-for="s in staff" :key="s.id" class="font-bold">
-              {{ staffTotals[s.id] }}
-            </TableCell>
-            <TableCell class="font-bold text-right">
-              {{ grandTotal }}
-            </TableCell>
-          </TableRow>
-        </TableFooter>
-      </Table>
+      <div v-else class="overflow-x-auto">
+        <Table>
+          <TableHeader class="sticky top-0 bg-background">
+            <TableRow>
+              <TableHead class="w-[100px]">
+                Date
+              </TableHead>
+              <TableHead v-for="s in staff" :key="s.id">
+                {{ s.name.toUpperCase() }}
+              </TableHead>
+              <TableHead class="text-right">
+                Total
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow v-for="day in daysInMonth" :key="day">
+              <TableCell>{{ day }}</TableCell>
+              <TableCell v-for="s in staff" :key="s.id">
+                <Input type="number" class="w-20" v-model.number="collections[day][s.id]" />
+              </TableCell>
+              <TableCell class="font-bold text-right">{{ dailyTotals[day] }}</TableCell>
+            </TableRow>
+          </TableBody>
+          <TableFooter class="sticky bottom-0 bg-background">
+            <TableRow>
+              <TableCell class="font-bold">Total</TableCell>
+              <TableCell v-for="s in staff" :key="s.id" class="font-bold">
+                {{ staffTotals[s.id] }}
+              </TableCell>
+              <TableCell class="font-bold text-right">
+                {{ grandTotal }}
+              </TableCell>
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </div>
     </div>
   </div>
 </template>
