@@ -24,43 +24,25 @@ const handleLogout = async () => {
 </script>
 
 <template>
-
   <!-- Sidebar -->
   <SidebarProvider>
     <AppSidebar />
     <SidebarInset>
-      <header class="flex h-16 shrink-0 items-center gap-2 px-4">
-        <SidebarTrigger class="-ml-1" />
-        <div>
-          <h1 class="text-xl font-semibold">Dashboard</h1>
+      <header
+        class="flex h-14 md:h-16 shrink-0 items-center gap-2 px-2 sm:px-4 shadow-sm z-20 bg-background sticky top-0">
+        <SidebarTrigger
+          class="-ml-1 md:hidden flex items-center justify-center h-10 w-10 rounded hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary" />
+        <div class="flex-1 flex items-center gap-2">
+          <h1 class="text-lg md:text-xl font-semibold">Dashboard</h1>
         </div>
-        <div class="flex flex-1 justify-end items-center gap-4">
+        <div class="flex items-center gap-2 md:gap-4">
           <ThemeToggle />
-          <Button @click="handleLogout" variant="outline">Logout</Button>
+          <Button @click="handleLogout" variant="outline" class="h-9 px-3 text-sm">Logout</Button>
         </div>
       </header>
-      <!-- 
-      <div class="flex h-screen bg-background text-foreground">
-        <div class="flex-1 flex flex-col overflow-hidden">
-          <header class="flex justify-between items-center p-4 bg-card border-b border-border">
-            <div>
-              
-              <h1 class="text-xl font-semibold">Dashboard</h1>
-            </div>
-            <div class="flex items-center gap-4">
-              <ThemeToggle />
-              <Button @click="handleLogout" variant="ghost">Logout</Button>
-            </div>
-          </header>
-          <main class="flex-1 overflow-hidden bg-background">
-            
-          </main>
-        </div>
-      </div>
- -->
-      <RouterView />
+      <main class="flex-1 min-h-0 overflow-y-auto bg-background">
+        <RouterView />
+      </main>
     </SidebarInset>
   </SidebarProvider>
-
-
 </template>

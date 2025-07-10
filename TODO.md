@@ -74,13 +74,15 @@
     - [x] Add sidebar link
     - [x] Implement table and CRUD logic
     - [x] Polish UI and test
-- [ ] **Deployment**
-- [ ] **Mobile Optimization**
+
+- [x] **Mobile Optimization**
   - [x] Make `SummaryView.vue` responsive and compact for mobile (cards, spacing, font sizes).
   - [x] Make `CollectionsView.vue` mobile-friendly with a card/list view for each day (no horizontal scroll), keep table for desktop.
-  - [ ] Make `ExpensesView.vue` mobile-friendly: use a card/list view for expenses on mobile, keep table for desktop.
-  - [ ] Make `SalesView.vue` mobile-friendly: use a card/list view for sales on mobile, keep table for desktop.
-  - [ ] Make `PayrollView.vue` mobile-friendly: use a card/list view for payroll on mobile, keep table for desktop.
-  - [ ] Make `AppLayout.vue` responsive (collapsible sidebar, mobile nav).
-  - [ ] Adjust form layouts in dialogs for better mobile viewing.
-  - [ ] Ensure all pages are usable and readable on a mobile device.
+  - [x] Make `ExpensesView.vue` mobile-friendly: use a card/list view for expenses on mobile, keep table for desktop.
+  - [x] Make `SalesView.vue` mobile-friendly: use a card/list view for sales on mobile, keep table for desktop.
+  - [x] Make `PayrollView.vue` mobile-friendly: use a card/list view for payroll on mobile, keep table for desktop.
+  - [x] Make `AppLayout.vue` responsive (collapsible sidebar, mobile nav).
+  - [x] Adjust form layouts in dialogs for better mobile viewing.
+  - [x] Ensure all pages are usable and readable on a mobile device.
+
+- [ ] **Deployment**
