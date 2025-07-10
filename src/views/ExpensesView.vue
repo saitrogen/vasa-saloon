@@ -210,12 +210,12 @@ const totalExpenses = computed(() => {
 </script>
 
 <template>
-  <div class="p-6 space-y-6">
-    <div class="flex items-center justify-between">
-      <h1 class="text-3xl font-bold tracking-tight">Expenses</h1>
-      <div class="flex items-center space-x-4">
+  <div class="p-2 sm:p-4 md:p-6 space-y-4 md:space-y-6">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-0">
+      <h1 class="text-xl md:text-3xl font-bold tracking-tight">Expenses</h1>
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:space-x-4">
         <Select v-model="selectedCategoryFilter">
-          <SelectTrigger class="w-[180px]">
+          <SelectTrigger class="w-full sm:w-[140px] h-9 text-sm">
             <SelectValue placeholder="Filter by category..." />
           </SelectTrigger>
           <SelectContent>
@@ -229,7 +229,7 @@ const totalExpenses = computed(() => {
           </SelectContent>
         </Select>
         <Select v-model="selectedMonth">
-          <SelectTrigger class="w-[180px]">
+          <SelectTrigger class="w-full sm:w-[110px] h-9 text-sm">
             <SelectValue placeholder="Select a month" />
           </SelectTrigger>
           <SelectContent>
@@ -242,7 +242,7 @@ const totalExpenses = computed(() => {
           </SelectContent>
         </Select>
         <Select v-model="selectedYear">
-          <SelectTrigger class="w-[180px]">
+          <SelectTrigger class="w-full sm:w-[110px] h-9 text-sm">
             <SelectValue placeholder="Select a year" />
           </SelectTrigger>
           <SelectContent>
@@ -298,8 +298,42 @@ const totalExpenses = computed(() => {
         </CardContent>
       </Card>
 
-      <!-- Expenses Table -->
-      <div class="w-full md:w-2/3">
+      <!-- Mobile Card/List View -->
+      <div class="w-full md:hidden space-y-3 mt-6">
+        <h2 class="text-lg font-bold mb-2">Monthly Expenses</h2>
+        <div v-if="loading && filteredExpenses.length === 0" class="text-center h-24 flex items-center justify-center">Loading expenses...</div>
+        <div v-else-if="filteredExpenses.length === 0" class="text-center h-24 flex items-center justify-center">No expenses recorded for this month.</div>
+        <div v-else>
+          <div v-for="expense in filteredExpenses" :key="expense.id" class="rounded-lg border p-3 bg-background flex flex-col gap-1">
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-muted-foreground">{{ format(new Date(expense.date), 'yyyy-MM-dd') }}</span>
+              <span class="font-bold text-base">{{ expense.amount.toFixed(2) }}</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-sm font-medium">{{ expense.expense_categories?.name || 'N/A' }}</span>
+              <DropdownMenu>
+                <DropdownMenuTrigger as-child>
+                  <Button variant="ghost" class="h-8 w-8 p-0">
+                    <span class="sr-only">Open menu</span>
+                    <MoreHorizontal class="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem @click="openEditDialog(expense)">Edit</DropdownMenuItem>
+                  <DropdownMenuItem @click="openDeleteDialog(expense)" class="text-red-600">Delete</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <div class="text-xs text-muted-foreground">{{ expense.description }}</div>
+          </div>
+        </div>
+        <div class="flex justify-end mt-2">
+          <p class="text-base font-bold">Total: {{ totalExpenses.toFixed(2) }}</p>
+        </div>
+      </div>
+
+      <!-- Desktop Table View -->
+      <div class="w-full hidden md:block">
         <h2 class="text-2xl font-bold mb-4">Monthly Expenses</h2>
         <div class="border rounded-lg">
           <Table>

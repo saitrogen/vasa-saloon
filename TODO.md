@@ -68,7 +68,7 @@
 - [x] **Simple Dashboard**
   - [x] Create a simple dashboard view.
   - [x] Display key metrics: Total Collections, Total Expenses, and Net Balance.
-- [ ] **Product Sales Page**
+- [x] **Product Sales Page**
     - [x] Create SalesView.vue
     - [x] Add route to router
     - [x] Add sidebar link
@@ -76,10 +76,11 @@
     - [x] Polish UI and test
 - [ ] **Deployment**
 - [ ] **Mobile Optimization**
-  - [ ] Make `AppLayout.vue` responsive (e.g., collapsible sidebar).
-  - [ ] Make the `CollectionsView.vue` table horizontally scrollable on small screens.
-  - [ ] Make the `ExpensesView.vue` table horizontally scrollable on small screens.
-  - [ ] Make the `SalesView.vue` table horizontally scrollable on small screens.
-  - [ ] Make the `PayrollView.vue` table horizontally scrollable on small screens.
+  - [x] Make `SummaryView.vue` responsive and compact for mobile (cards, spacing, font sizes).
+  - [x] Make `CollectionsView.vue` mobile-friendly with a card/list view for each day (no horizontal scroll), keep table for desktop.
+  - [ ] Make `ExpensesView.vue` mobile-friendly: use a card/list view for expenses on mobile, keep table for desktop.
+  - [ ] Make `SalesView.vue` mobile-friendly: use a card/list view for sales on mobile, keep table for desktop.
+  - [ ] Make `PayrollView.vue` mobile-friendly: use a card/list view for payroll on mobile, keep table for desktop.
+  - [ ] Make `AppLayout.vue` responsive (collapsible sidebar, mobile nav).
   - [ ] Adjust form layouts in dialogs for better mobile viewing.
   - [ ] Ensure all pages are usable and readable on a mobile device.

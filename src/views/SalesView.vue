@@ -84,20 +84,45 @@ const formatCurrency = (value: number) => {
 </script>
 
 <template>
-  <div class="p-6 space-y-6">
-    <div class="flex items-center justify-between">
-      <h1 class="text-3xl font-bold tracking-tight">Product Sales</h1>
-      <div class="flex items-center space-x-4">
-        <select v-model="selectedMonth" class="border rounded px-2 py-1">
+  <div class="p-2 sm:p-4 md:p-6 space-y-4 md:space-y-6">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-0">
+      <h1 class="text-xl md:text-3xl font-bold tracking-tight">Product Sales</h1>
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:space-x-4">
+        <select v-model="selectedMonth" class="border rounded px-2 py-1 w-full sm:w-[140px] h-9 text-sm">
           <option v-for="month in months" :key="month.value" :value="month.value">{{ month.label }}</option>
         </select>
-        <select v-model="selectedYear" class="border rounded px-2 py-1">
+        <select v-model="selectedYear" class="border rounded px-2 py-1 w-full sm:w-[110px] h-9 text-sm">
           <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
         </select>
-        <Button @click="openSaleForm()">Add Sale</Button>
+        <Button @click="openSaleForm()" class="w-full sm:w-auto h-9 px-3 text-sm">Add Sale</Button>
       </div>
     </div>
-    <Card>
+
+    <!-- Mobile Card/List View -->
+    <div class="w-full md:hidden space-y-3 mt-6">
+      <h2 class="text-lg font-bold mb-2">Sales for {{ months[selectedMonth].label }} {{ selectedYear }}</h2>
+      <div v-if="loading" class="text-center h-24 flex items-center justify-center">Loading...</div>
+      <div v-else-if="!sales.length" class="text-center h-24 flex items-center justify-center">No product sales recorded for this month.</div>
+      <div v-else>
+        <div v-for="sale in sales" :key="sale.id" class="rounded-lg border p-3 bg-background flex flex-col gap-1">
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-muted-foreground">{{ new Date(sale.date).toLocaleDateString() }}</span>
+            <span class="font-bold text-base">{{ formatCurrency(sale.amount) }}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-sm font-medium">{{ sale.name }}</span>
+            <div class="flex space-x-2">
+              <Button variant="ghost" size="icon" class="h-8 w-8" @click="openSaleForm(sale)">Edit</Button>
+              <Button variant="ghost" size="icon" class="h-8 w-8 text-red-500" @click="handleDeleteSale(sale.id)">Delete</Button>
+            </div>
+          </div>
+          <div class="text-xs text-muted-foreground">{{ sale.description }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Desktop Table View -->
+    <Card class="hidden md:block">
       <CardHeader>
         <CardTitle>Sales for {{ months[selectedMonth].label }} {{ selectedYear }}</CardTitle>
       </CardHeader>
@@ -127,8 +152,7 @@ const formatCurrency = (value: number) => {
               <TableCell class="text-right">
                 <div class="flex justify-end space-x-2">
                   <Button variant="ghost" size="icon" class="h-8 w-8" @click="openSaleForm(sale)">Edit</Button>
-                  <Button variant="ghost" size="icon" class="h-8 w-8 text-red-500"
-                    @click="handleDeleteSale(sale.id)">Delete</Button>
+                  <Button variant="ghost" size="icon" class="h-8 w-8 text-red-500" @click="handleDeleteSale(sale.id)">Delete</Button>
                 </div>
               </TableCell>
             </TableRow>
